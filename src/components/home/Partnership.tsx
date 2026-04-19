@@ -33,7 +33,7 @@ export default function Partnership() {
           href="https://www.szombathelyikezilabda.hu/hirek/uj-helyi-egyuttmukodes-az-szkka-es-az-aetheris-kozott"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block mt-10 border border-ink text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-white transition-colors"
+          className="inline-block mt-10 border border-ink text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-bone transition-colors"
         >
           Elolvasom a hírt →
         </a>
