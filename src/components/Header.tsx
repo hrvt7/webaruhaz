@@ -61,12 +61,10 @@ export default function Header() {
 
           <Link
             href="/"
-            className="flex items-center gap-2 select-none"
+            className="font-display text-[22px] leading-none tracking-[0.25em] select-none"
             aria-label="Aetheris"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/aetheris-logo.jpg" alt="" className="h-7 w-7 object-contain bg-transparent mix-blend-screen" />
-            <span className="font-display text-[22px] leading-none tracking-[0.25em]">AETHERIS</span>
+            AETHERIS
           </Link>
 
           <div className="flex items-center justify-end gap-1 md:gap-3">
@@ -118,11 +116,9 @@ export default function Header() {
             <Link
               href="/"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-2"
+              className="font-display text-lg tracking-[0.25em]"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/aetheris-logo.jpg" alt="" className="h-6 w-6 object-contain" />
-              <span className="font-display text-lg tracking-[0.25em]">AETHERIS</span>
+              AETHERIS
             </Link>
             <button
               onClick={() => setMobileOpen(false)}
