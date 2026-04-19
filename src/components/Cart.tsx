@@ -15,7 +15,7 @@ export default function Cart() {
   const { t, c } = useT();
   const { items, open, setOpen, inc, dec, remove, subtotal, clear } = useCart();
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
-  const [form, setForm] = useState({ name: "", phone: "", address: "", note: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "" });
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState<null | "card" | "whatsapp">(null);
   const [error, setError] = useState<string | null>(null);
@@ -64,6 +64,7 @@ ${lines}
 ${t.whatsapp.subtotal}: ${formatHUF(subtotal)}
 
 ${t.whatsapp.nameLabel}: ${form.name}
+Email: ${form.email}
 ${t.whatsapp.phoneLabel}: ${form.phone}
 ${t.whatsapp.addressLabel}: ${form.address}
 ${t.whatsapp.noteLabel}: ${form.note}`;
@@ -74,6 +75,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           customer_name: form.name,
+          customer_email: form.email,
           customer_phone: form.phone,
           customer_address: form.address,
           note: form.note,
@@ -241,6 +243,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
           <form onSubmit={submit} className="flex-1 flex flex-col">
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               <Field label={t.cart.name} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+              <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required type="email" />
               <Field label={t.cart.phone} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required type="tel" />
               <Field label={t.cart.address} value={form.address} onChange={(v) => setForm({ ...form, address: v })} required />
               <Field label={t.cart.note} value={form.note} onChange={(v) => setForm({ ...form, note: v })} textarea />

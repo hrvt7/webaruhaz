@@ -19,6 +19,7 @@ export default function OrderRow({
   order: {
     id: string;
     customer_name: string;
+    customer_email: string | null;
     customer_phone: string;
     customer_address: string | null;
     note: string | null;
@@ -51,7 +52,10 @@ export default function OrderRow({
         </td>
         <td className="p-4">
           <div>{order.customer_name}</div>
-          <div className="text-xs text-muted">{order.customer_phone}</div>
+          <div className="text-xs text-muted">
+            {order.customer_email && <>{order.customer_email}<br /></>}
+            {order.customer_phone}
+          </div>
         </td>
         <td className="p-4 text-xs text-muted">
           {new Date(order.created_at).toLocaleString()}

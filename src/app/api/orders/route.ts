@@ -6,6 +6,7 @@ export async function POST(req: Request) {
   const sb = await supabaseServer();
   const { error } = await sb.from("orders").insert({
     customer_name: body.customer_name ?? "",
+    customer_email: body.customer_email ?? "",
     customer_phone: body.customer_phone ?? "",
     customer_address: body.customer_address ?? "",
     note: body.note ?? "",

@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
   const body = (await req.json()) as {
     items: Item[];
-    customer: { name: string; phone: string; address: string; note: string };
+    customer: { name: string; email: string; phone: string; address: string; note: string };
   };
 
   if (!body.items?.length) {
@@ -43,6 +43,7 @@ export async function POST(req: Request) {
     .from("orders")
     .insert({
       customer_name: body.customer.name,
+      customer_email: body.customer.email,
       customer_phone: body.customer.phone,
       customer_address: body.customer.address,
       note: body.customer.note,
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
           ]
         : []),
     ],
-    customer_email: undefined,
+    customer_email: body.customer.email || undefined,
     shipping_address_collection: undefined, // cím már megadva a kosárban
     phone_number_collection: { enabled: false },
     locale: "hu",

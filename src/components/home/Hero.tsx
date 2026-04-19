@@ -3,7 +3,7 @@ import { LandingContent } from "@/lib/store";
 
 export default function Hero({ data, dict }: { data: LandingContent["hero"]; dict: { shopWomen: string; shopMen: string } }) {
   return (
-    <section className="relative h-[calc(100vh-64px)] min-h-[640px] bg-bone overflow-hidden">
+    <section className="relative h-screen min-h-[640px] -mt-[64px] bg-bone overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={data.image}
