@@ -17,7 +17,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main className="flex-1 pt-[64px]">{children}</main>
+      <main className="flex-1 pt-[96px]">{children}</main>
       <Footer />
       <Cart />
       <CookieBanner locale={locale} />

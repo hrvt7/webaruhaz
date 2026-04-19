@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { Search, User, ShoppingBag, Menu as MenuIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
@@ -13,8 +12,6 @@ export default function Header() {
   const { totalQty, setOpen, hydrated } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-  const transparent = pathname === "/" && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -34,13 +31,11 @@ export default function Header() {
 
   return (
     <>
-      <div className="w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase py-2 text-center">
-        {t.topbar}
-      </div>
+      <div className="fixed top-0 left-0 right-0 z-40">
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          transparent ? "bg-transparent text-white" : "bg-white text-ink"
-        } ${scrolled ? "border-b border-line" : "border-b border-transparent"}`}
+        className={`transition-all duration-300 ${
+          scrolled ? "bg-white text-ink border-b border-line" : "bg-ink text-white"
+        }`}
       >
         <div className="mx-auto max-w-[1440px] px-4 md:px-8 h-[64px] grid grid-cols-[1fr_auto_1fr] items-center">
           <div className="flex items-center gap-3">
@@ -110,6 +105,10 @@ export default function Header() {
           </div>
         </div>
       </header>
+      <div className="w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase py-2 text-center">
+        {t.topbar}
+      </div>
+      </div>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 bg-white">
