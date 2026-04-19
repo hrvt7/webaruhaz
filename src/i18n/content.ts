@@ -135,7 +135,7 @@ const hu: Content = {
     men: "Férfi",
     denim: "Denim",
     unsure:
-      "Bizonytalan vagy? Írj az hello@lunara.hu címre, és segítünk a méretválasztásban.",
+      "Bizonytalan vagy? Írj az info@aetheris.hu címre, és segítünk a méretválasztásban.",
     headers: {
       size: "Méret",
       bust: "Mellbőség (cm)",
@@ -155,7 +155,7 @@ const hu: Content = {
       },
       {
         t: "Nemzetközi szállítás",
-        b: "EU-n belül 3–5 munkanap, 6.900 Ft átalány. EU-n kívül egyedi ajánlatot adunk, kérlek írj az hello@lunara.hu címre.",
+        b: "EU-n belül 3–5 munkanap, 6.900 Ft átalány. EU-n kívül egyedi ajánlatot adunk, kérlek írj az info@aetheris.hu címre.",
       },
       {
         t: "Express szállítás Budapesten",
@@ -167,16 +167,16 @@ const hu: Content = {
       },
       {
         t: "Csere",
-        b: "Más méretre vagy színre ingyenes csere a termék kézhezvételétől számított 30 napon belül. Írj az hello@lunara.hu címre a csere indításához.",
+        b: "Más méretre vagy színre ingyenes csere a termék kézhezvételétől számított 30 napon belül. Írj az info@aetheris.hu címre a csere indításához.",
       },
       {
         t: "Garancia",
-        b: "Minden LUNARA terméket 2 év gyártási garanciával értékesítünk. Anyag- vagy varrási hibát díjmentesen javítunk vagy cserélünk.",
+        b: "Minden Aetheris terméket 2 év gyártási garanciával értékesítünk. Anyag- vagy varrási hibát díjmentesen javítunk vagy cserélünk.",
       },
     ],
   },
   stores: {
-    flagshipName: "LUNARA Flagship",
+    flagshipName: "Aetheris Flagship",
     address1: "Bazilika 1051 Budapest",
     address2: "Október 6. utca 12.",
     address3: "Magyarország",
@@ -253,7 +253,7 @@ const en: Content = {
     men: "Men",
     denim: "Denim",
     unsure:
-      "Not sure? Write to hello@lunara.hu and we'll help with sizing.",
+      "Not sure? Write to info@aetheris.hu and we'll help with sizing.",
     headers: {
       size: "Size",
       bust: "Bust (cm)",
@@ -273,7 +273,7 @@ const en: Content = {
       },
       {
         t: "International shipping",
-        b: "Within EU 3–5 business days, flat 6,900 Ft. Outside EU on request — please email hello@lunara.hu.",
+        b: "Within EU 3–5 business days, flat 6,900 Ft. Outside EU on request — please email info@aetheris.hu.",
       },
       {
         t: "Express within Budapest",
@@ -285,16 +285,16 @@ const en: Content = {
       },
       {
         t: "Exchanges",
-        b: "Free size or colour exchange within 30 days of receipt. Email hello@lunara.hu to start an exchange.",
+        b: "Free size or colour exchange within 30 days of receipt. Email info@aetheris.hu to start an exchange.",
       },
       {
         t: "Warranty",
-        b: "All LUNARA products come with a 2-year manufacturing warranty. Material or stitching defects repaired or replaced free.",
+        b: "All Aetheris products come with a 2-year manufacturing warranty. Material or stitching defects repaired or replaced free.",
       },
     ],
   },
   stores: {
-    flagshipName: "LUNARA Flagship",
+    flagshipName: "Aetheris Flagship",
     address1: "Bazilika 1051 Budapest",
     address2: "Október 6. utca 12.",
     address3: "Hungary",
@@ -374,7 +374,7 @@ const de: Content = {
     men: "Herren",
     denim: "Denim",
     unsure:
-      "Unsicher? Schreib an hello@lunara.hu und wir helfen bei der Größe.",
+      "Unsicher? Schreib an info@aetheris.hu und wir helfen bei der Größe.",
     headers: {
       size: "Größe",
       bust: "Brust (cm)",
@@ -394,7 +394,7 @@ const de: Content = {
       },
       {
         t: "Internationaler Versand",
-        b: "EU 3–5 Werktage, pauschal 6.900 Ft. Außerhalb EU auf Anfrage — E-Mail an hello@lunara.hu.",
+        b: "EU 3–5 Werktage, pauschal 6.900 Ft. Außerhalb EU auf Anfrage — E-Mail an info@aetheris.hu.",
       },
       {
         t: "Express in Budapest",
@@ -406,16 +406,16 @@ const de: Content = {
       },
       {
         t: "Umtausch",
-        b: "Kostenloser Größen- oder Farbumtausch innerhalb 30 Tagen. E-Mail an hello@lunara.hu.",
+        b: "Kostenloser Größen- oder Farbumtausch innerhalb 30 Tagen. E-Mail an info@aetheris.hu.",
       },
       {
         t: "Garantie",
-        b: "Alle LUNARA Produkte mit 2 Jahren Herstellergarantie. Material- oder Verarbeitungsfehler kostenlos repariert oder ersetzt.",
+        b: "Alle Aetheris Produkte mit 2 Jahren Herstellergarantie. Material- oder Verarbeitungsfehler kostenlos repariert oder ersetzt.",
       },
     ],
   },
   stores: {
-    flagshipName: "LUNARA Flagship",
+    flagshipName: "Aetheris Flagship",
     address1: "Bazilika 1051 Budapest",
     address2: "Október 6. utca 12.",
     address3: "Ungarn",

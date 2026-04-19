@@ -15,7 +15,7 @@ export default async function StoresPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80&auto=format&fit=crop"
-              alt="LUNARA Flagship"
+              alt="Aetheris Flagship"
               className="h-full w-full object-cover"
             />
           </div>
@@ -32,13 +32,13 @@ export default async function StoresPage() {
           </div>
           <div className="mt-6 text-sm">
             <a href="tel:+36305252336" className="underline">+36 30 525 2336</a><br />
-            <a href="mailto:hello@lunara.hu" className="underline">hello@lunara.hu</a>
+            <a href="mailto:info@aetheris.hu" className="underline">info@aetheris.hu</a>
           </div>
         </div>
 
         <div className="aspect-[4/3] md:aspect-auto md:min-h-[520px] border border-line overflow-hidden">
           <iframe
-            title="LUNARA Flagship"
+            title="Aetheris Flagship"
             src="https://www.google.com/maps?q=Budapest%20Bazilika&output=embed"
             className="w-full h-full border-0"
             loading="lazy"

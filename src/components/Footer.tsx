@@ -43,7 +43,7 @@ export default function Footer() {
     <footer className="bg-bone border-t border-line mt-24">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 py-16 grid gap-12 lg:grid-cols-[1.3fr_repeat(3,1fr)_1.3fr]">
         <div>
-          <div className="font-display text-2xl tracking-[0.25em]">LUNARA</div>
+          <div className="font-display text-2xl tracking-[0.25em]">AETHERIS</div>
           <p className="mt-4 text-sm text-muted max-w-xs leading-relaxed">
             {t.footer.tagline}
           </p>
@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-3 text-muted">
             <a
-              href="https://instagram.com/lunara.hu"
+              href="https://instagram.com/aetheris.hu"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -88,7 +88,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="https://facebook.com/lunara.hu"
+              href="https://facebook.com/profile.php?id=61580621469300"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Facebook"
@@ -100,7 +100,7 @@ export default function Footer() {
             </a>
           </div>
           <div className="mt-6 text-xs text-muted leading-relaxed">
-            hello@lunara.hu<br />
+            info@aetheris.hu<br />
             +36 30 525 2336
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function Footer() {
 
       <div className="border-t border-line">
         <div className="mx-auto max-w-[1440px] px-6 md:px-10 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] tracking-widest-2 uppercase text-muted">
-          <div>© {new Date().getFullYear()} LUNARA. {t.footer.allRights}</div>
+          <div>© {new Date().getFullYear()} AETHERIS. {t.footer.allRights}</div>
           <div className="flex items-center gap-4">
             <span>Visa</span>
             <span>Mastercard</span>

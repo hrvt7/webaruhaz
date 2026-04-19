@@ -14,7 +14,7 @@ type P = {
 };
 
 export default function CampaignForm({ products, activeCount }: { products: P[]; activeCount: number }) {
-  const [subject, setSubject] = useState("Új kollekció érkezett — LUNARA");
+  const [subject, setSubject] = useState("Új kollekció érkezett — Aetheris");
   const [introHtml, setIntroHtml] = useState(
     "<p>Kedves Vásárlónk,</p><p>Az új kollekcióban válogatott darabokat hoztunk nektek. Fedezd fel lent.</p>",
   );

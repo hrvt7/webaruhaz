@@ -23,7 +23,7 @@ export type SendResult = {
   error?: string;
 };
 
-const DEFAULT_FROM = "LUNARA <onboarding@resend.dev>";
+const DEFAULT_FROM = "Aetheris <onboarding@resend.dev>";
 
 export async function sendEmail(input: SendInput): Promise<SendResult> {
   const resend = getResend();

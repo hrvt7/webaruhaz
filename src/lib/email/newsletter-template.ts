@@ -51,7 +51,7 @@ export function renderNewsletterHtml(opts: {
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;max-width:600px;width:100%;">
           <tr>
             <td align="center" style="padding:40px 24px 24px;border-bottom:1px solid #e5e0d7;">
-              <div style="font-family:Georgia, serif;font-size:28px;letter-spacing:0.25em;">LUNARA</div>
+              <div style="font-family:Georgia, serif;font-size:28px;letter-spacing:0.25em;">Aetheris</div>
               <div style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#6b6b6b;margin-top:6px;">Modern wardrobe essentials</div>
             </td>
           </tr>
@@ -83,9 +83,9 @@ export function renderNewsletterHtml(opts: {
 
           <tr>
             <td style="padding:24px 32px;border-top:1px solid #e5e0d7;font-size:11px;color:#6b6b6b;line-height:1.6;">
-              <div>LUNARA · Budapest · hello@lunara.hu</div>
+              <div>Aetheris · Budapest · info@aetheris.hu</div>
               <div style="margin-top:10px;">
-                Ezt az emailt azért kaptad, mert feliratkoztál a LUNARA hírlevelére.
+                Ezt az emailt azért kaptad, mert feliratkoztál a Aetheris hírlevelére.
                 <a href="${unsubscribeUrl}" style="color:#6b6b6b;text-decoration:underline;">Leiratkozás</a>
               </div>
             </td>

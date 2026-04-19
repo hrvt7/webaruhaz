@@ -7,7 +7,7 @@ export default async function AboutPage() {
     hu: {
       overline: "A történetünk",
       title: "Csendes mesterség.\nEurópában készítve.",
-      p1: "A LUNARA 2020-ban indult Budapesten, azzal a szándékkal, hogy csendes, tartós alapdarabokat kínáljon — a gyorsdivat túlkínálata helyett. Minden kollekció európai műhelyekben készül, válogatott olasz, portugál és magyar szövőkből.",
+      p1: "A Aetheris 2020-ban indult Budapesten, azzal a szándékkal, hogy csendes, tartós alapdarabokat kínáljon — a gyorsdivat túlkínálata helyett. Minden kollekció európai műhelyekben készül, válogatott olasz, portugál és magyar szövőkből.",
       p2: "A gondolkodásunk egyszerű: kevesebb, de jobb. Kevesebb szín, kevesebb fazon, kevesebb kompromisszum. Minden darab tíz évre szánt döntés.",
       p3: "A fenntarthatóság nem marketing: a mintákat gondosan vágjuk, a szövethulladékot újrahasznosítjuk, a csomagolás 100%-ban újrapapír.",
       stats: [
@@ -19,7 +19,7 @@ export default async function AboutPage() {
     en: {
       overline: "Our story",
       title: "Quiet craft.\nBuilt in Europe.",
-      p1: "LUNARA was founded in 2020 in Budapest with one intention: to offer quiet, durable essentials instead of the overflow of fast fashion. Each collection is made in European workshops from selected Italian, Portuguese and Hungarian mills.",
+      p1: "Aetheris was founded in 2020 in Budapest with one intention: to offer quiet, durable essentials instead of the overflow of fast fashion. Each collection is made in European workshops from selected Italian, Portuguese and Hungarian mills.",
       p2: "Our thinking is simple: fewer, better. Fewer colours, fewer silhouettes, fewer compromises. Every piece is a ten-year decision.",
       p3: "Sustainability is not marketing: we cut patterns carefully, recycle fabric waste, and our packaging is 100% recycled paper.",
       stats: [
@@ -31,7 +31,7 @@ export default async function AboutPage() {
     de: {
       overline: "Unsere Geschichte",
       title: "Leises Handwerk.\nGefertigt in Europa.",
-      p1: "LUNARA wurde 2020 in Budapest gegründet — mit der Absicht, leise, langlebige Essentials anzubieten, statt dem Überfluss der Fast Fashion. Jede Kollektion entsteht in europäischen Werkstätten aus ausgewählten italienischen, portugiesischen und ungarischen Stoffen.",
+      p1: "Aetheris wurde 2020 in Budapest gegründet — mit der Absicht, leise, langlebige Essentials anzubieten, statt dem Überfluss der Fast Fashion. Jede Kollektion entsteht in europäischen Werkstätten aus ausgewählten italienischen, portugiesischen und ungarischen Stoffen.",
       p2: "Unser Ansatz: weniger, aber besser. Weniger Farben, weniger Silhouetten, weniger Kompromisse. Jedes Stück ist eine Entscheidung für zehn Jahre.",
       p3: "Nachhaltigkeit ist kein Marketing: wir schneiden Muster sorgfältig, recyceln Stoffreste und unsere Verpackung besteht zu 100% aus Recyclingpapier.",
       stats: [
@@ -48,7 +48,7 @@ export default async function AboutPage() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1920&q=80&auto=format&fit=crop"
-          alt="LUNARA"
+          alt="Aetheris"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-ink/30" />

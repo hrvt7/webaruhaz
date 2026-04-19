@@ -22,7 +22,7 @@ export default function AszfPage() {
 
       <Section n="1." title="A Szolgáltató adatai">
         <p>
-          <strong>Cégnév:</strong> LUNARA Kft. [CSERÉLD KI]<br />
+          <strong>Cégnév:</strong> Aetheris Kft. [CSERÉLD KI]<br />
           <strong>Székhely:</strong> 1051 Budapest, Október 6. utca 12. [CSERÉLD KI]<br />
           <strong>Cégjegyzékszám:</strong> 01-09-999999 [CSERÉLD KI]<br />
           <strong>Bejegyző bíróság:</strong> Fővárosi Törvényszék Cégbírósága [CSERÉLD KI]<br />
@@ -30,7 +30,7 @@ export default function AszfPage() {
           <strong>Közösségi adószám:</strong> HU99999999 [CSERÉLD KI]<br />
           <strong>Bankszámlaszám:</strong> [CSERÉLD KI — IBAN]<br />
           <strong>Képviselő:</strong> [CSERÉLD KI — ügyvezető neve]<br />
-          <strong>E-mail:</strong> hello@lunara.hu<br />
+          <strong>E-mail:</strong> info@aetheris.hu<br />
           <strong>Telefon:</strong> +36 30 525 2336<br />
           <strong>Weboldal:</strong> https://webaruhaz-gamma.vercel.app
         </p>
@@ -133,7 +133,7 @@ export default function AszfPage() {
           A 45/2014. (II. 26.) Korm. rendelet alapján a Vevő a szerződéstől a
           termék átvételétől számított <strong>14 naptári napon belül indokolás
           nélkül elállhat</strong>. Az elállási jogát a Vevő a Szolgáltató felé
-          írásban (e-mail: hello@lunara.hu) köteles jelezni. Az elállási
+          írásban (e-mail: info@aetheris.hu) köteles jelezni. Az elállási
           nyilatkozat mintáját a rendelet 2. melléklete tartalmazza.
         </p>
         <p>
@@ -185,7 +185,7 @@ export default function AszfPage() {
 
       <Section n="10." title="Panaszkezelés">
         <p>
-          A Vevő panaszát írásban (hello@lunara.hu) nyújthatja be. A Szolgáltató a
+          A Vevő panaszát írásban (info@aetheris.hu) nyújthatja be. A Szolgáltató a
           panaszt legkésőbb annak beérkezésétől számított <strong>30 napon
           belül</strong> írásban megválaszolja. A panasz elutasítása esetén a
           Szolgáltató írásban indokolja döntését.

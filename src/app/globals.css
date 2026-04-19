@@ -2,10 +2,10 @@
 
 :root {
   --ink: #0a0a0a;
-  --bone: #F5F1EA;
-  --sand: #D4C5A9;
+  --bone: #f6f6f6;
+  --sand: #e8e8e8;
   --accent: #1a1a1a;
-  --line: #e5e0d7;
+  --line: #e5e5e5;
   --white: #ffffff;
   --muted: #6b6b6b;
   --sale: #b8231c;
@@ -54,23 +54,19 @@ h1, h2, h3, h4, .font-display {
 
 ::selection { background: var(--ink); color: var(--white); }
 
-/* no scrollbar for horizontal scroll rails */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 
-/* subtle fade up */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .fade-up { animation: fadeUp 0.6s ease-out both; }
 
-/* image hover treatment */
 .hover-zoom { overflow: hidden; }
 .hover-zoom img { transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1); }
 .hover-zoom:hover img { transform: scale(1.05); }
 
-/* marquee */
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }

@@ -29,13 +29,13 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://webaruhaz-gamma.vercel.app"),
   title: {
-    default: "LUNARA — Modern wardrobe essentials",
-    template: "%s · LUNARA",
+    default: "Aetheris — Modern wardrobe essentials",
+    template: "%s · Aetheris",
   },
   description:
-    "LUNARA — minimalista prémium divat. Válogatott, tartós alapdarabok nőknek és férfiaknak. Budapest.",
+    "Aetheris — minimalista prémium divat. Válogatott, tartós alapdarabok nőknek és férfiaknak. Budapest.",
   openGraph: {
-    title: "LUNARA — Modern wardrobe essentials",
+    title: "Aetheris — Modern wardrobe essentials",
     description: "Minimalista prémium divat. Budapest.",
     type: "website",
     locale: "hu_HU",
@@ -58,8 +58,8 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "LUNARA",
-              email: "hello@lunara.hu",
+              name: "Aetheris",
+              email: "info@aetheris.hu",
               telephone: "+36 30 525 2336",
               address: {
                 "@type": "PostalAddress",
@@ -67,8 +67,8 @@ export default async function RootLayout({
                 addressCountry: "HU",
               },
               sameAs: [
-                "https://instagram.com/lunara.hu",
-                "https://facebook.com/lunara.hu",
+                "https://instagram.com/aetheris.hu",
+                "https://facebook.com/profile.php?id=61580621469300",
               ],
             }),
           }}

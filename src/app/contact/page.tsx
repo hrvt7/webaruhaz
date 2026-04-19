@@ -14,7 +14,7 @@ export default function ContactPage() {
         <div className="mt-10 space-y-6 text-sm">
           <div>
             <div className="text-[11px] tracking-widest-2 uppercase text-muted mb-1">{t.contact.email}</div>
-            <a href="mailto:hello@lunara.hu" className="hover:underline">hello@lunara.hu</a>
+            <a href="mailto:info@aetheris.hu" className="hover:underline">info@aetheris.hu</a>
           </div>
           <div>
             <div className="text-[11px] tracking-widest-2 uppercase text-muted mb-1">{t.contact.phone}</div>
@@ -23,12 +23,12 @@ export default function ContactPage() {
           <div>
             <div className="text-[11px] tracking-widest-2 uppercase text-muted mb-1">{t.contact.instagram}</div>
             <a
-              href="https://instagram.com/lunara.hu"
+              href="https://instagram.com/aetheris.hu"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline"
             >
-              @lunara.hu
+              @aetheris.hu
             </a>
           </div>
         </div>

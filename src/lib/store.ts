@@ -185,7 +185,7 @@ const DEFAULT_LANDING: LandingContent = {
     overline: "Our story",
     title: "Crafted in Europe.\nBuilt to last.",
     body_1:
-      "A LUNARA 2020-ban indult Budapesten, azzal a szándékkal, hogy csendes, minimalista alapdarabokat kínáljon a zsúfolt piac helyett.",
+      "A Aetheris 2020-ban indult Budapesten, azzal a szándékkal, hogy csendes, minimalista alapdarabokat kínáljon a zsúfolt piac helyett.",
     body_2: "A wardrobe nem trend kérdése. A wardrobe egy hosszú döntéssorozat.",
     image:
       "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=80&auto=format&fit=crop",

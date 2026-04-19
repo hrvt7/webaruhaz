@@ -19,13 +19,13 @@ export default function PrivacyPage() {
 
       <Section n="1." title="Az Adatkezelő">
         <p>
-          <strong>Cégnév:</strong> LUNARA Kft. [CSERÉLD KI]<br />
+          <strong>Cégnév:</strong> Aetheris Kft. [CSERÉLD KI]<br />
           <strong>Székhely:</strong> 1051 Budapest, Október 6. utca 12. [CSERÉLD KI]<br />
           <strong>Cégjegyzékszám:</strong> 01-09-999999 [CSERÉLD KI]<br />
           <strong>Adószám:</strong> 99999999-2-41 [CSERÉLD KI]<br />
           <strong>Képviselő:</strong> [CSERÉLD KI — ügyvezető neve]<br />
           <strong>Bejegyző bíróság:</strong> Fővárosi Törvényszék Cégbírósága [CSERÉLD KI]<br />
-          <strong>E-mail:</strong> hello@lunara.hu<br />
+          <strong>E-mail:</strong> info@aetheris.hu<br />
           <strong>Telefon:</strong> +36 30 525 2336<br />
           <strong>Weboldal:</strong> https://webaruhaz-gamma.vercel.app<br />
           <strong>NAIH regisztrációs szám:</strong> nem kötelező (GDPR alapján nem szükséges)
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
           </li>
         </ul>
         <p>
-          Bármelyik jog gyakorlásához írjon a <a href="mailto:hello@lunara.hu">hello@lunara.hu</a> címre.
+          Bármelyik jog gyakorlásához írjon a <a href="mailto:info@aetheris.hu">info@aetheris.hu</a> címre.
           Kérését 30 napon belül teljesítjük, vagy elutasításának indokáról
           tájékoztatjuk.
         </p>
@@ -207,7 +207,7 @@ export default function PrivacyPage() {
         </ul>
         <p>
           A hozzájárulás bármikor módosítható a böngésző localStorage törlésével
-          vagy a <a href="mailto:hello@lunara.hu">hello@lunara.hu</a> címen történő
+          vagy a <a href="mailto:info@aetheris.hu">info@aetheris.hu</a> címen történő
           kapcsolatfelvétellel.
         </p>
       </Section>

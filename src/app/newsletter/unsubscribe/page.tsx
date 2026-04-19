@@ -39,7 +39,7 @@ export default async function UnsubscribePage({
         <p className="mt-5 text-muted leading-relaxed">
           {ok
             ? `A(z) ${email} email cím leiratkozott a hírlevelünkről. Sajnáljuk, hogy elmész — bármikor visszatérhetsz a főoldalon keresztül.`
-            : "A leiratkozási link érvénytelen vagy már használatban volt. Ha segítségre van szükséged, írj az hello@lunara.hu címre."}
+            : "A leiratkozási link érvénytelen vagy már használatban volt. Ha segítségre van szükséged, írj az info@aetheris.hu címre."}
         </p>
         <Link
           href="/"

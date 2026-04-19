@@ -42,7 +42,7 @@ export default async function AdminLayout({
             href="/admin"
             className="font-display text-xl tracking-[0.25em] block"
           >
-            LUNARA
+            Aetheris
           </Link>
           <div className="mt-1 text-[10px] tracking-widest-2 uppercase text-muted">
             Admin
