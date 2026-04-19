@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Search, User, ShoppingBag, Menu as MenuIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
@@ -12,6 +13,8 @@ export default function Header() {
   const { totalQty, setOpen, hydrated } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const transparent = pathname === "/" && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -34,7 +37,11 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 z-40">
       <header
         className={`transition-all duration-300 ${
-          scrolled ? "bg-white text-ink border-b border-line" : "bg-ink text-white"
+          transparent
+            ? "bg-transparent text-white"
+            : scrolled
+            ? "bg-white text-ink border-b border-line"
+            : "bg-ink text-white"
         }`}
       >
         <div className="mx-auto max-w-[1440px] px-4 md:px-8 h-[64px] grid grid-cols-[1fr_auto_1fr] items-center">
@@ -105,7 +112,11 @@ export default function Header() {
           </div>
         </div>
       </header>
-      <div className="w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase py-2 text-center">
+      <div
+        className={`w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase text-center overflow-hidden transition-all duration-300 ${
+          scrolled ? "max-h-10 py-2 opacity-100" : "max-h-0 py-0 opacity-0"
+        }`}
+      >
         {t.topbar}
       </div>
       </div>
