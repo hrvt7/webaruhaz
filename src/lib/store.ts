@@ -64,6 +64,11 @@ export type LandingContent = {
     image2: string;
     image3: string;
   };
+  newsletter?: {
+    overline: string;
+    title: string;
+    body: string;
+  };
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {

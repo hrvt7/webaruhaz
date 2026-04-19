@@ -29,7 +29,7 @@ export default async function Home() {
       <CollectionHighlight data={landing.collection_highlight} />
       <EditorialGrid data={landing.editorial} />
       <Partnership />
-      <Newsletter />
+      <Newsletter data={landing.newsletter} />
     </>
   );
 }

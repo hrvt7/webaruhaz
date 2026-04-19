@@ -2,23 +2,51 @@
 
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
+import { LandingContent } from "@/lib/store";
 
-export default function Newsletter() {
-  const { t } = useT();
+const FALLBACK = {
+  hu: {
+    overline: "Hírlevél",
+    title: "Iratkozz fel a hírlevelünkre",
+    body: "Új kollekciók, akciós kódok, csendes ajánlatok — havonta egyszer, nem többször.",
+  },
+  en: {
+    overline: "Newsletter",
+    title: "Join our newsletter",
+    body: "New collections, discount codes, quiet offers — once a month, no more.",
+  },
+  de: {
+    overline: "Newsletter",
+    title: "Abonniere unseren Newsletter",
+    body: "Neue Kollektionen, Rabattcodes, leise Angebote — einmal im Monat, nicht mehr.",
+  },
+};
+
+export default function Newsletter({
+  data,
+}: {
+  data?: LandingContent["newsletter"];
+}) {
+  const { t, locale } = useT();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+
+  const fb = FALLBACK[locale];
+  const overline = data?.overline?.trim() || fb.overline;
+  const title = data?.title?.trim() || fb.title;
+  const body = data?.body?.trim() || fb.body;
 
   return (
     <section className="bg-ink text-white py-24">
       <div className="mx-auto max-w-2xl px-6 text-center">
         <div className="text-[11px] tracking-widest-3 uppercase opacity-70 mb-5">
-          {t.home.theJournal}
+          {overline}
         </div>
         <h2 className="font-display text-3xl md:text-5xl leading-tight">
-          {t.home.joinJournal}
+          {title}
         </h2>
         <p className="mt-5 text-sm md:text-base opacity-80 max-w-md mx-auto">
-          {t.home.journalSub}
+          {body}
         </p>
         {sent ? (
           <div className="mt-10 text-sm opacity-90">{t.home.thanksSubscribe}</div>

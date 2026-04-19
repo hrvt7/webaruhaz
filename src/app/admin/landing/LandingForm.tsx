@@ -129,6 +129,25 @@ export default function LandingForm({
         </div>
       </Section>
 
+      <Section title="Hírlevél blokk (főoldal alján)">
+        <Text
+          label="Overline (kis fejléc a cím felett)"
+          v={state.newsletter?.overline || ""}
+          on={(v) => setState({ ...state, newsletter: { overline: v, title: state.newsletter?.title || "", body: state.newsletter?.body || "" } })}
+        />
+        <Text
+          label="Cím"
+          v={state.newsletter?.title || ""}
+          on={(v) => setState({ ...state, newsletter: { overline: state.newsletter?.overline || "", title: v, body: state.newsletter?.body || "" } })}
+        />
+        <Area
+          label="Leírás"
+          rows={3}
+          v={state.newsletter?.body || ""}
+          on={(v) => setState({ ...state, newsletter: { overline: state.newsletter?.overline || "", title: state.newsletter?.title || "", body: v } })}
+        />
+      </Section>
+
       <Section title="Futó szalag (marquee)">
         <div className="text-xs text-muted mb-3">
           A hero alatt ismétlődő szövegek, vesszővel elválasztva. Pl: <em>Magyar márka, Ingyenes szállítás 30.000 Ft felett, 14 napos visszaküldés, Edzésre szabva</em>
