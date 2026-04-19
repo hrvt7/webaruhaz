@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0a0a0a;
+  --bone: #F5F1EA;
+  --sand: #D4C5A9;
+  --accent: #1a1a1a;
+  --line: #e5e0d7;
+  --white: #ffffff;
+  --muted: #6b6b6b;
+  --sale: #b8231c;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-bone: var(--bone);
+  --color-sand: var(--sand);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-sale: var(--sale);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-playfair);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+.font-mono, code, .price {
+  font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.tracking-widest-2 { letter-spacing: 0.22em; }
+.tracking-widest-3 { letter-spacing: 0.28em; }
+
+.hairline { border-color: var(--line); }
+
+::selection { background: var(--ink); color: var(--white); }
+
+/* no scrollbar for horizontal scroll rails */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* subtle fade up */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s ease-out both; }
+
+/* image hover treatment */
+.hover-zoom { overflow: hidden; }
+.hover-zoom img { transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1); }
+.hover-zoom:hover img { transform: scale(1.05); }
+
+/* marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-inner { animation: marquee 40s linear infinite; }
