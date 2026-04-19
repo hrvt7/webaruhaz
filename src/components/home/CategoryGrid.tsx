@@ -9,17 +9,17 @@ export default function CategoryGrid() {
     {
       title: t.nav.women,
       href: "/shop/women",
-      img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=80&auto=format&fit=crop",
+      img: "/cat-women.jpg",
     },
     {
       title: t.nav.men,
       href: "/shop/men",
-      img: "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=900&q=80&auto=format&fit=crop",
+      img: "/cat-men.jpg",
     },
     {
-      title: t.nav.accessories,
-      href: "/shop/accessories",
-      img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=900&q=80&auto=format&fit=crop",
+      title: "Szettek",
+      href: "/shop/women",
+      img: "/cat-sets.jpg",
     },
   ];
   return (
@@ -41,18 +41,13 @@ export default function CategoryGrid() {
         </div>
       </div>
 
-      {/* Desktop grid (md+) */}
       <div className="hidden md:block mx-auto max-w-[1440px] px-6 md:px-10">
         <div className="grid md:grid-cols-3 gap-4 md:gap-6">
           {cards.map((c) => (
             <Link key={c.title} href={c.href} className="group">
               <div className="hover-zoom aspect-[3/4] bg-bone overflow-hidden">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={c.img}
-                  alt={c.title}
-                  className="h-full w-full object-cover"
-                />
+                <img src={c.img} alt={c.title} className="h-full w-full object-cover" />
               </div>
               <div className="mt-4 flex items-center justify-between">
                 <div className="font-display text-xl">{c.title}</div>
@@ -65,21 +60,12 @@ export default function CategoryGrid() {
         </div>
       </div>
 
-      {/* Mobile scroller */}
       <div className="md:hidden flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-[15vw]">
         {cards.map((c) => (
-          <Link
-            key={c.title}
-            href={c.href}
-            className="shrink-0 snap-center w-[70vw] group"
-          >
+          <Link key={c.title} href={c.href} className="shrink-0 snap-center w-[70vw] group">
             <div className="hover-zoom aspect-[3/4] bg-bone overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={c.img}
-                alt={c.title}
-                className="h-full w-full object-cover"
-              />
+              <img src={c.img} alt={c.title} className="h-full w-full object-cover" />
             </div>
             <div className="mt-4 flex items-center justify-between">
               <div className="font-display text-xl">{c.title}</div>
