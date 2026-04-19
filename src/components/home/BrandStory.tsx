@@ -16,7 +16,6 @@ export default function BrandStory({ data }: { data: LandingContent["brand_story
           muted
           playsInline
           preload="auto"
-          poster={data.image}
           className="h-full w-full object-cover"
         />
       </div>

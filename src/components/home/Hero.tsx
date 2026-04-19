@@ -11,7 +11,6 @@ export default function Hero({ data, dict }: { data: LandingContent["hero"]; dic
         muted
         playsInline
         preload="auto"
-        poster={data.image}
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/10" />
