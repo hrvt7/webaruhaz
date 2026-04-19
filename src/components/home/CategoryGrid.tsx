@@ -23,24 +23,56 @@ export default function CategoryGrid() {
     },
   ];
   return (
-    <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-28">
-      <div className="flex items-end justify-between mb-10 md:mb-14">
-        <div>
-          <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
-            {t.home.theEdit}
+    <section className="py-20 md:py-28">
+      <div className="mx-auto max-w-[1440px] px-6 md:px-10 mb-10 md:mb-14">
+        <div className="flex items-end justify-between">
+          <div>
+            <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
+              {t.home.theEdit}
+            </div>
+            <h2 className="font-display text-3xl md:text-5xl">{t.home.shopByCategory}</h2>
           </div>
-          <h2 className="font-display text-3xl md:text-5xl">{t.home.shopByCategory}</h2>
+          <Link
+            href="/shop"
+            className="hidden md:inline text-[11px] tracking-widest-2 uppercase hover:opacity-60"
+          >
+            {t.home.viewAll}
+          </Link>
         </div>
-        <Link
-          href="/shop"
-          className="hidden md:inline text-[11px] tracking-widest-2 uppercase hover:opacity-60"
-        >
-          {t.home.viewAll}
-        </Link>
       </div>
-      <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+
+      {/* Desktop grid (md+) */}
+      <div className="hidden md:block mx-auto max-w-[1440px] px-6 md:px-10">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+          {cards.map((c) => (
+            <Link key={c.title} href={c.href} className="group">
+              <div className="hover-zoom aspect-[3/4] bg-bone overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={c.img}
+                  alt={c.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <div className="font-display text-xl">{c.title}</div>
+                <div className="text-[11px] tracking-widest-2 uppercase text-muted group-hover:text-ink transition-colors">
+                  {t.home.shop}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile scroller */}
+      <div className="md:hidden flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-[15vw]">
         {cards.map((c) => (
-          <Link key={c.title} href={c.href} className="group">
+          <Link
+            key={c.title}
+            href={c.href}
+            className="shrink-0 snap-center w-[70vw] group"
+          >
             <div className="hover-zoom aspect-[3/4] bg-bone overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -51,7 +83,7 @@ export default function CategoryGrid() {
             </div>
             <div className="mt-4 flex items-center justify-between">
               <div className="font-display text-xl">{c.title}</div>
-              <div className="text-[11px] tracking-widest-2 uppercase text-muted group-hover:text-ink transition-colors">
+              <div className="text-[11px] tracking-widest-2 uppercase text-muted">
                 {t.home.shop}
               </div>
             </div>
