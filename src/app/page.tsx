@@ -26,7 +26,7 @@ export default async function Home() {
       <NewArrivals items={newArrivals} />
       <BrandStory data={landing.brand_story} />
       <CollectionHighlight data={landing.collection_highlight} />
-      <EditorialGrid />
+      <EditorialGrid data={landing.editorial} />
       <Newsletter />
     </>
   );

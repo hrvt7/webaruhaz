@@ -103,6 +103,32 @@ export default function LandingForm({
         />
       </Section>
 
+      <Section title="Lookbook (3 kép a főoldal alján)">
+        <div className="grid md:grid-cols-3 gap-4">
+          <ImagePicker
+            label="Első (nagy, bal oldal)"
+            v={state.editorial?.image1 || ""}
+            on={(url) => setState({ ...state, editorial: { image1: url, image2: state.editorial?.image2 || "", image3: state.editorial?.image3 || "" } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, editorial: { image1: u, image2: s.editorial?.image2 || "", image3: s.editorial?.image3 || "" } })), "landing/editorial")}
+            dropLabel={labels.dropImage}
+          />
+          <ImagePicker
+            label="Második (jobb felül)"
+            v={state.editorial?.image2 || ""}
+            on={(url) => setState({ ...state, editorial: { image1: state.editorial?.image1 || "", image2: url, image3: state.editorial?.image3 || "" } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, editorial: { image1: s.editorial?.image1 || "", image2: u, image3: s.editorial?.image3 || "" } })), "landing/editorial")}
+            dropLabel={labels.dropImage}
+          />
+          <ImagePicker
+            label="Harmadik (jobb alul)"
+            v={state.editorial?.image3 || ""}
+            on={(url) => setState({ ...state, editorial: { image1: state.editorial?.image1 || "", image2: state.editorial?.image2 || "", image3: url } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, editorial: { image1: s.editorial?.image1 || "", image2: s.editorial?.image2 || "", image3: u } })), "landing/editorial")}
+            dropLabel={labels.dropImage}
+          />
+        </div>
+      </Section>
+
       <Section title="Futó szalag (marquee)">
         <div className="text-xs text-muted mb-3">
           A hero alatt ismétlődő szövegek, vesszővel elválasztva. Pl: <em>Magyar márka, Ingyenes szállítás 30.000 Ft felett, 14 napos visszaküldés, Edzésre szabva</em>
@@ -197,14 +223,18 @@ function ImagePicker({
     <div>
       <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-2">{label}</div>
       {v && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={v} alt="" className="w-full aspect-[16/7] object-cover bg-bone mb-3" />
+        /\.(mp4|webm|mov|m4v)(\?|$)/i.test(v) ? (
+          <video src={v} autoPlay loop muted playsInline className="w-full aspect-[16/7] object-cover bg-bone mb-3" />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={v} alt="" className="w-full aspect-[16/7] object-cover bg-bone mb-3" />
+        )
       )}
       <div className="flex gap-3 items-center">
         <label className="inline-flex items-center gap-2 border border-line px-4 py-2 cursor-pointer hover:border-ink text-sm">
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,video/mp4,video/webm,video/quicktime"
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];

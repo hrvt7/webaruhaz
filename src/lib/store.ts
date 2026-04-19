@@ -59,6 +59,11 @@ export type LandingContent = {
   marquee?: {
     items: string[];
   };
+  editorial?: {
+    image1: string;
+    image2: string;
+    image3: string;
+  };
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {

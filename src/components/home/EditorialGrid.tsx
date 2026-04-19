@@ -1,6 +1,7 @@
 "use client";
 
 import { useT } from "@/i18n/provider";
+import { LandingContent } from "@/lib/store";
 
 const CAPTIONS = {
   hu: ["Lendület", "Kitartás", "Fegyelem"],
@@ -8,10 +9,18 @@ const CAPTIONS = {
   de: ["Momentum", "Ausdauer", "Disziplin"],
 };
 
-export default function EditorialGrid() {
+export default function EditorialGrid({
+  data,
+}: {
+  data?: LandingContent["editorial"];
+}) {
   const { t, locale } = useT();
   const captions = CAPTIONS[locale];
-  const shots = ["/landing-2.jpg", "/landing-3.jpg", "/landing-4.jpg"];
+  const shots = [
+    data?.image1 || "/landing-2.jpg",
+    data?.image2 || "/landing-3.jpg",
+    data?.image3 || "/landing-4.jpg",
+  ];
 
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-28">
