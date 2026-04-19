@@ -4,15 +4,15 @@ import { useState } from "react";
 import { X, Plus, Minus, Trash2, CreditCard, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useCart, lineKey } from "@/context/CartContext";
-import { formatHUF } from "@/data/products";
 import { useT } from "@/i18n/provider";
+import { formatMoney, FREE_SHIPPING_THRESHOLD_HUF } from "@/lib/currency";
 import PaymentBadges from "@/components/PaymentBadges";
 
 const PHONE_RAW = "36305252336";
 const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
 
 export default function Cart() {
-  const { t, c } = useT();
+  const { t, c, locale } = useT();
   const { items, open, setOpen, inc, dec, remove, subtotal, clear } = useCart();
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "" });
@@ -32,7 +32,7 @@ export default function Cart() {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items, customer: form }),
+        body: JSON.stringify({ items, customer: form, locale }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
@@ -50,7 +50,7 @@ export default function Cart() {
     const lines = items
       .map(
         (i) =>
-          `• ${i.name} — ${i.color}, ${i.size} — ${formatHUF(i.price)}${
+          `• ${i.name} — ${i.color}, ${i.size} — ${formatMoney(i.price, locale)}${
             i.qty > 1 ? " × " + i.qty : ""
           }`,
       )
@@ -61,7 +61,7 @@ ${t.whatsapp.intro}
 
 ${lines}
 
-${t.whatsapp.subtotal}: ${formatHUF(subtotal)}
+${t.whatsapp.subtotal}: ${formatMoney(subtotal, locale)}
 
 ${t.whatsapp.nameLabel}: ${form.name}
 Email: ${form.email}
@@ -193,7 +193,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                         </div>
                         <div className="flex flex-col items-end justify-between">
                           <div className="price text-sm">
-                            {formatHUF(i.price * i.qty)}
+                            {formatMoney(i.price * i.qty, locale)}
                           </div>
                           <button
                             aria-label="Remove"
@@ -212,26 +212,30 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
 
             {items.length > 0 && (
               <div className="border-t border-line p-6 space-y-3">
-                {subtotal < 30000 ? (
+                {subtotal < FREE_SHIPPING_THRESHOLD_HUF ? (
                   <div className="bg-bone p-3 space-y-2">
                     <div className="text-xs text-ink">
-                      Még <span className="price font-medium">{formatHUF(30000 - subtotal)}</span> az ingyenes szállításhoz
+                      {locale === "hu" && <>Még <span className="price font-medium">{formatMoney(FREE_SHIPPING_THRESHOLD_HUF - subtotal, locale)}</span> az ingyenes szállításhoz</>}
+                      {locale === "en" && <>Add <span className="price font-medium">{formatMoney(FREE_SHIPPING_THRESHOLD_HUF - subtotal, locale)}</span> more for free shipping</>}
+                      {locale === "de" && <>Noch <span className="price font-medium">{formatMoney(FREE_SHIPPING_THRESHOLD_HUF - subtotal, locale)}</span> bis zum kostenlosen Versand</>}
                     </div>
                     <div className="h-1 bg-line overflow-hidden rounded-full">
                       <div
                         className="h-full bg-ink transition-all duration-500"
-                        style={{ width: `${Math.min(100, (subtotal / 30000) * 100)}%` }}
+                        style={{ width: `${Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD_HUF) * 100)}%` }}
                       />
                     </div>
                   </div>
                 ) : (
                   <div className="bg-bone p-3 text-xs text-ink">
-                    ✓ A szállítás <strong>ingyenes</strong>
+                    {locale === "hu" && <>✓ A szállítás <strong>ingyenes</strong></>}
+                    {locale === "en" && <>✓ <strong>Free shipping</strong> unlocked</>}
+                    {locale === "de" && <>✓ <strong>Kostenloser Versand</strong> freigeschaltet</>}
                   </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
                   <span>{t.cart.subtotal}</span>
-                  <span className="price">{formatHUF(subtotal)}</span>
+                  <span className="price">{formatMoney(subtotal, locale)}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs text-muted">
                   <span>{t.cart.shippingLabel}</span>
@@ -292,7 +296,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
             <div className="border-t border-line p-6 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span>{t.cart.total}</span>
-                <span className="price">{formatHUF(subtotal + (subtotal >= 30000 ? 0 : 1690))}</span>
+                <span className="price">{formatMoney(subtotal + (subtotal >= 30000 ? 0 : 1690), locale)}</span>
               </div>
 
               {STRIPE_ENABLED && (

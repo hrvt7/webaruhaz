@@ -7,13 +7,13 @@ import { useCart } from "@/context/CartContext";
 import {
   COLOR_HEX,
   Product,
-  formatHUF,
   productCompareAt,
   productLongDesc,
   productShortDesc,
 } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useT } from "@/i18n/provider";
+import { formatMoney } from "@/lib/currency";
 
 export default function ProductDetail({
   product: p,
@@ -22,7 +22,7 @@ export default function ProductDetail({
   product: Product;
   related: Product[];
 }) {
-  const { t, c } = useT();
+  const { t, c, locale } = useT();
   const { add, setOpen } = useCart();
   const [color, setColor] = useState(p.colors[0]);
   const [size, setSize] = useState<string | null>(
@@ -99,13 +99,13 @@ export default function ProductDetail({
           <div className="mt-3 flex items-baseline gap-3">
             {onSale ? (
               <>
-                <span className="price text-xl text-sale">{formatHUF(p.price)}</span>
+                <span className="price text-xl text-sale">{formatMoney(p.price, locale)}</span>
                 <span className="price text-sm text-muted line-through">
-                  {formatHUF(compareAt!)}
+                  {formatMoney(compareAt!, locale)}
                 </span>
               </>
             ) : (
-              <span className="price text-xl">{formatHUF(p.price)}</span>
+              <span className="price text-xl">{formatMoney(p.price, locale)}</span>
             )}
           </div>
 

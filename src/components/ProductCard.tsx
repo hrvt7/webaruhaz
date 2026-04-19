@@ -3,13 +3,13 @@
 import Link from "next/link";
 import {
   Product,
-  formatHUF,
   productCompareAt,
 } from "@/data/products";
 import { useT } from "@/i18n/provider";
+import { formatMoney } from "@/lib/currency";
 
 export default function ProductCard({ p }: { p: Product }) {
-  const { c } = useT();
+  const { c, locale } = useT();
   const compareAt = productCompareAt(p);
   const onSale = compareAt && compareAt > p.price;
   return (
@@ -49,13 +49,13 @@ export default function ProductCard({ p }: { p: Product }) {
         <div className="text-right shrink-0">
           {onSale ? (
             <>
-              <div className="price text-sm text-sale">{formatHUF(p.price)}</div>
+              <div className="price text-sm text-sale">{formatMoney(p.price, locale)}</div>
               <div className="price text-[11px] text-muted line-through">
-                {formatHUF(compareAt!)}
+                {formatMoney(compareAt!, locale)}
               </div>
             </>
           ) : (
-            <div className="price text-sm">{formatHUF(p.price)}</div>
+            <div className="price text-sm">{formatMoney(p.price, locale)}</div>
           )}
         </div>
       </div>
