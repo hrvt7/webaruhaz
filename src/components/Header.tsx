@@ -15,6 +15,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const transparent = pathname === "/" && !scrolled;
+  const hideTopbar = pathname?.startsWith("/product/") ?? false;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -114,7 +115,7 @@ export default function Header() {
       </header>
       <div
         className={`w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase text-center overflow-hidden transition-all duration-300 ${
-          scrolled ? "max-h-10 py-2 opacity-100" : "max-h-0 py-0 opacity-0"
+          scrolled && !hideTopbar ? "max-h-10 py-2 opacity-100" : "max-h-0 py-0 opacity-0"
         }`}
       >
         {t.topbar}

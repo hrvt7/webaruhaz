@@ -212,6 +212,23 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
 
             {items.length > 0 && (
               <div className="border-t border-line p-6 space-y-3">
+                {subtotal < 30000 ? (
+                  <div className="bg-bone p-3 space-y-2">
+                    <div className="text-xs text-ink">
+                      Még <span className="price font-medium">{formatHUF(30000 - subtotal)}</span> az ingyenes szállításhoz
+                    </div>
+                    <div className="h-1 bg-line overflow-hidden rounded-full">
+                      <div
+                        className="h-full bg-ink transition-all duration-500"
+                        style={{ width: `${Math.min(100, (subtotal / 30000) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-bone p-3 text-xs text-ink">
+                    ✓ A szállítás <strong>ingyenes</strong>
+                  </div>
+                )}
                 <div className="flex items-center justify-between text-sm">
                   <span>{t.cart.subtotal}</span>
                   <span className="price">{formatHUF(subtotal)}</span>
