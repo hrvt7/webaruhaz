@@ -14,6 +14,7 @@ export default function Cart() {
   const { items, open, setOpen, inc, dec, remove, subtotal, clear } = useCart();
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", phone: "", address: "", note: "" });
+  const [accepted, setAccepted] = useState(false);
 
   const close = () => {
     setOpen(false);
@@ -228,6 +229,20 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
               <div className="text-xs text-muted border border-line p-4 leading-relaxed">
                 {t.cart.infoNote}
               </div>
+              <label className="flex items-start gap-2 text-xs text-muted leading-relaxed cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  checked={accepted}
+                  onChange={(e) => setAccepted(e.target.checked)}
+                  className="accent-ink mt-0.5"
+                />
+                <span>
+                  Elolvastam és elfogadom az{" "}
+                  <a href="/aszf" target="_blank" className="underline">ÁSZF</a>-et és az{" "}
+                  <a href="/adatkezeles" target="_blank" className="underline">Adatkezelési tájékoztatót</a>.
+                </span>
+              </label>
             </div>
             <div className="border-t border-line p-6 space-y-3">
               <div className="flex items-center justify-between text-sm">
@@ -236,7 +251,8 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
               </div>
               <button
                 type="submit"
-                className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent"
+                disabled={!accepted}
+                className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {t.cart.placeOrder}
               </button>

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import LoginForm from "./LoginForm";
 import { getT } from "@/i18n/server";
 
@@ -12,12 +13,16 @@ export default async function LoginPage() {
             Admin
           </div>
         </div>
-        <LoginForm labels={{
-          email: t.admin.email,
-          password: t.admin.password,
-          signIn: t.admin.signIn,
-          backToSite: t.admin.backToSite,
-        }} />
+        <Suspense>
+          <LoginForm
+            labels={{
+              email: t.admin.email,
+              password: t.admin.password,
+              signIn: t.admin.signIn,
+              backToSite: t.admin.backToSite,
+            }}
+          />
+        </Suspense>
       </div>
     </div>
   );

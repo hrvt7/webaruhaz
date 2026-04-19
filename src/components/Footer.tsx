@@ -24,6 +24,8 @@ export default function Footer() {
         [t.footer.helpLinks.shipping, "/shipping"],
         [t.footer.helpLinks.contact, "/contact"],
         [t.footer.helpLinks.stores, "/stores"],
+        ["ÁSZF", "/aszf"],
+        ["Adatkezelési tájékoztató", "/adatkezeles"],
       ],
     },
     {
