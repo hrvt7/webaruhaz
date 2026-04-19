@@ -9,7 +9,7 @@ export default function Newsletter() {
   const [sent, setSent] = useState(false);
 
   return (
-    <section className="bg-ink text-bone py-24">
+    <section className="bg-ink text-white py-24">
       <div className="mx-auto max-w-2xl px-6 text-center">
         <div className="text-[11px] tracking-widest-3 uppercase opacity-70 mb-5">
           {t.home.theJournal}
@@ -44,9 +44,9 @@ export default function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.home.yourEmail}
-              className="flex-1 bg-transparent border-b border-bone/40 focus:border-bone py-2 text-sm outline-none text-center sm:text-left"
+              className="flex-1 bg-transparent border-b border-white/40 focus:border-white py-2 text-sm outline-none text-center sm:text-left"
             />
-            <button className="bg-bone text-ink text-[11px] tracking-widest-2 uppercase px-6 py-3 hover:bg-bone transition-colors">
+            <button className="bg-white text-ink text-[11px] tracking-widest-2 uppercase px-6 py-3 hover:bg-bone transition-colors">
               {t.home.subscribe}
             </button>
           </form>

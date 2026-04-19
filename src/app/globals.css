@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --ink: #0a0a0a;
@@ -10,19 +9,6 @@
   --white: #ffffff;
   --muted: #6b6b6b;
   --sale: #b8231c;
-  color-scheme: light;
-}
-
-html.dark {
-  --ink: #ededed;
-  --bone: #141414;
-  --sand: #1f1f1f;
-  --accent: #dcdcdc;
-  --line: #2a2a2a;
-  --white: #0a0a0a;
-  --muted: #9a9a9a;
-  --sale: #ef4444;
-  color-scheme: dark;
 }
 
 @theme inline {
@@ -86,6 +72,3 @@ h1, h2, h3, h4, .font-display {
   to { transform: translateX(-50%); }
 }
 .marquee-inner { animation: marquee 40s linear infinite; }
-
-/* Areas that should stay literally dark in BOTH themes (hero poster bg, video fallback) */
-.always-dark { background-color: #0a0a0a; }

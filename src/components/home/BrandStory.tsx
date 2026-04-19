@@ -32,7 +32,7 @@ export default function BrandStory({ data }: { data: LandingContent["brand_story
         )}
         <Link
           href="/about"
-          className="inline-block mt-10 border border-ink text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-bone transition-colors"
+          className="inline-block mt-10 border border-ink text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-white transition-colors"
         >
           {t.home.readMore}
         </Link>

@@ -143,7 +143,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                     <Link
                       href="/shop"
                       onClick={close}
-                      className="inline-block mt-6 bg-ink text-bone text-[11px] tracking-widest-2 uppercase px-6 py-3"
+                      className="inline-block mt-6 bg-ink text-white text-[11px] tracking-widest-2 uppercase px-6 py-3"
                     >
                       {t.cart.shopAll}
                     </Link>
@@ -241,7 +241,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                 </div>
                 <button
                   onClick={() => setStep("checkout")}
-                  className="w-full bg-ink text-bone text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent transition-colors"
+                  className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent transition-colors"
                 >
                   {t.cart.checkout}
                 </button>
@@ -301,7 +301,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                     type="button"
                     onClick={() => accepted && payWithCard()}
                     disabled={!accepted || busy !== null}
-                    className="w-full bg-ink text-bone text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
                   >
                     <CreditCard size={14} strokeWidth={1.6} />
                     {busy === "card" ? "..." : c.cardPayment}
@@ -347,7 +347,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
               </p>
               <button
                 onClick={close}
-                className="mt-8 bg-ink text-bone text-[11px] tracking-widest-2 uppercase px-8 py-3"
+                className="mt-8 bg-ink text-white text-[11px] tracking-widest-2 uppercase px-8 py-3"
               >
                 {t.cart.closeBtn}
               </button>

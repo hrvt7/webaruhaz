@@ -7,7 +7,6 @@ import { Search, User, ShoppingBag, Menu as MenuIcon, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Header() {
   const { t } = useT();
@@ -43,7 +42,7 @@ export default function Header() {
             ? "bg-transparent text-white"
             : scrolled
             ? "bg-white text-ink border-b border-line"
-            : "bg-ink text-bone"
+            : "bg-ink text-white"
         }`}
       >
         <div className="mx-auto max-w-[1440px] px-4 md:px-8 h-[64px] grid grid-cols-[1fr_auto_1fr] items-center">
@@ -80,7 +79,6 @@ export default function Header() {
             <div className="hidden md:inline">
               <LanguageSwitcher />
             </div>
-            <ThemeToggle />
             <Link
               href="/stores"
               className="hidden xl:inline text-[12px] tracking-widest-2 uppercase hover:opacity-60 ml-4"
@@ -107,7 +105,7 @@ export default function Header() {
             >
               <ShoppingBag size={18} strokeWidth={1.4} />
               {hydrated && totalQty > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-ink text-bone text-[10px] font-mono h-4 min-w-4 px-1 grid place-items-center rounded-full">
+                <span className="absolute -top-0.5 -right-0.5 bg-ink text-white text-[10px] font-mono h-4 min-w-4 px-1 grid place-items-center rounded-full">
                   {totalQty}
                 </span>
               )}
@@ -116,7 +114,7 @@ export default function Header() {
         </div>
       </header>
       <div
-        className={`w-full bg-ink text-bone text-[11px] tracking-widest-3 uppercase text-center overflow-hidden transition-all duration-300 ${
+        className={`w-full bg-ink text-white text-[11px] tracking-widest-3 uppercase text-center overflow-hidden transition-all duration-300 ${
           scrolled && !hideTopbar ? "max-h-10 py-2 opacity-100" : "max-h-0 py-0 opacity-0"
         }`}
       >
@@ -166,9 +164,8 @@ export default function Header() {
               <Link href="/contact" onClick={() => setMobileOpen(false)}>
                 {t.contactLink}
               </Link>
-              <div className="pt-3 flex items-center gap-4">
+              <div className="pt-3">
                 <LanguageSwitcher />
-                <ThemeToggle />
               </div>
             </div>
           </nav>
