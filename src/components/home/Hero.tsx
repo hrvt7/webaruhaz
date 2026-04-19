@@ -15,9 +15,11 @@ export default function Hero({ data, dict }: { data: LandingContent["hero"]; dic
 
       <div className="relative z-10 mx-auto max-w-[1440px] h-full px-6 md:px-10 flex items-end md:items-center pb-16 md:pb-0">
         <div className="max-w-2xl text-white">
-          <div className="text-[11px] tracking-widest-3 uppercase mb-6 opacity-90">
-            {data.overline}
-          </div>
+          {data.overline && (
+            <div className="text-[11px] tracking-widest-3 uppercase mb-6 opacity-90">
+              {data.overline}
+            </div>
+          )}
           <h1 className="font-display text-5xl md:text-7xl lg:text-[88px] leading-[0.95] tracking-tight">
             {data.title_line_1} <br /> {data.title_line_2}
           </h1>
