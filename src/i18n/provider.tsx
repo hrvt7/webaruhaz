@@ -2,8 +2,9 @@
 
 import { createContext, useContext, ReactNode } from "react";
 import { Dict, Locale, getDict } from "./dict";
+import { Content, getContent } from "./content";
 
-type Ctx = { locale: Locale; t: Dict };
+type Ctx = { locale: Locale; t: Dict; c: Content };
 const I18nCtx = createContext<Ctx | null>(null);
 
 export function I18nProvider({
@@ -14,7 +15,7 @@ export function I18nProvider({
   children: ReactNode;
 }) {
   return (
-    <I18nCtx.Provider value={{ locale, t: getDict(locale) }}>
+    <I18nCtx.Provider value={{ locale, t: getDict(locale), c: getContent(locale) }}>
       {children}
     </I18nCtx.Provider>
   );

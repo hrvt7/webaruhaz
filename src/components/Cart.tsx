@@ -12,7 +12,7 @@ const PHONE_RAW = "36305252336";
 const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
 
 export default function Cart() {
-  const { t } = useT();
+  const { t, c } = useT();
   const { items, open, setOpen, inc, dec, remove, subtotal, clear } = useCart();
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", phone: "", address: "", note: "" });
@@ -217,7 +217,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                 <div className="flex items-center justify-between text-xs text-muted">
                   <span>{t.cart.shippingLabel}</span>
                   <span>
-                    {subtotal >= 30000 ? "Ingyenes" : "1.690 Ft"}
+                    {subtotal >= 30000 ? c.shippingValueFree : c.shippingValuePaid}
                   </span>
                 </div>
                 <button
@@ -254,9 +254,11 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                   className="accent-ink mt-0.5"
                 />
                 <span>
-                  Elolvastam és elfogadom az{" "}
-                  <a href="/aszf" target="_blank" className="underline">ÁSZF</a>-et és az{" "}
-                  <a href="/adatkezeles" target="_blank" className="underline">Adatkezelési tájékoztatót</a>.
+                  {c.acceptTerms.before}
+                  <a href="/aszf" target="_blank" className="underline">{c.acceptTerms.aszf}</a>
+                  {c.acceptTerms.and}
+                  <a href="/adatkezeles" target="_blank" className="underline">{c.acceptTerms.privacy}</a>
+                  {c.acceptTerms.after}
                 </span>
               </label>
 
@@ -282,11 +284,11 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                     className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
                   >
                     <CreditCard size={14} strokeWidth={1.6} />
-                    {busy === "card" ? "..." : "Bankkártyás fizetés"}
+                    {busy === "card" ? "..." : c.cardPayment}
                   </button>
                   <PaymentBadges />
                   <div className="text-center text-[10px] tracking-widest-2 uppercase text-muted">
-                    Biztonságos fizetés · Stripe
+                    {c.secureCheckout}
                   </div>
                 </>
               )}
@@ -302,7 +304,7 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                 }`}
               >
                 <MessageCircle size={14} strokeWidth={1.6} />
-                {busy === "whatsapp" ? "..." : "Rendelés WhatsApp-on"}
+                {busy === "whatsapp" ? "..." : c.whatsappOrder}
               </button>
 
               <button

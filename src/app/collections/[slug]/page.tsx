@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCollection, getProducts } from "@/lib/store";
 import ProductCard from "@/components/ProductCard";
+import { getT } from "@/i18n/server";
 
 export const revalidate = 30;
 export const dynamicParams = true;
@@ -12,28 +13,31 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const c = await getCollection(slug);
-  if (!c) notFound();
+  const { c } = await getT();
+  const col = await getCollection(slug);
+  if (!col) notFound();
   const items = await getProducts({ collection: slug });
 
   return (
     <>
       <section className="relative h-[80vh] min-h-[540px] overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={c.hero_image} alt={c.title} className="absolute inset-0 h-full w-full object-cover" />
+        <img src={col.hero_image} alt={col.title} className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-ink/25" />
         <div className="relative z-10 h-full grid place-items-center text-center text-white px-6">
           <div className="max-w-xl">
-            <div className="text-[11px] tracking-widest-3 uppercase mb-5 opacity-90">Kollekció</div>
-            <h1 className="font-display text-5xl md:text-7xl">{c.title}</h1>
-            <p className="mt-6 text-sm md:text-base opacity-90">{c.subtitle}</p>
+            <div className="text-[11px] tracking-widest-3 uppercase mb-5 opacity-90">
+              {c.collections.overline}
+            </div>
+            <h1 className="font-display text-5xl md:text-7xl">{col.title}</h1>
+            <p className="mt-6 text-sm md:text-base opacity-90">{col.subtitle}</p>
           </div>
         </div>
       </section>
 
-      {c.intro && (
+      {col.intro && (
         <section className="mx-auto max-w-3xl px-6 py-16 text-center">
-          <p className="text-muted leading-relaxed whitespace-pre-line">{c.intro}</p>
+          <p className="text-muted leading-relaxed whitespace-pre-line">{col.intro}</p>
         </section>
       )}
 
@@ -44,7 +48,7 @@ export default async function CollectionPage({
           ))}
           {items.length === 0 && (
             <div className="col-span-full text-center text-muted">
-              A kollekció hamarosan.
+              {c.collections.comingSoon}
             </div>
           )}
         </div>
@@ -53,7 +57,7 @@ export default async function CollectionPage({
             href="/shop"
             className="inline-block border border-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-white transition-colors"
           >
-            Teljes katalógus
+            {c.collections.shopAll}
           </Link>
         </div>
       </section>

@@ -1,4 +1,4 @@
-export const metadata = { title: "Size guide" };
+import { getT } from "@/i18n/server";
 
 const women = [
   ["XS", "80–84", "60–64", "86–90"],
@@ -24,26 +24,28 @@ const denim = [
   ["36", "88", "112", "86"],
 ];
 
-export default function SizeGuidePage() {
+export default async function SizeGuidePage() {
+  const { c } = await getT();
+  const h = c.sizeGuide.headers;
   return (
     <section className="mx-auto max-w-3xl px-6 py-16 md:py-24">
-      <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">Guide</div>
-      <h1 className="font-display text-5xl md:text-6xl leading-[1]">Size guide</h1>
+      <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
+        {c.sizeGuide.overline}
+      </div>
+      <h1 className="font-display text-5xl md:text-6xl leading-[1]">
+        {c.sizeGuide.title}
+      </h1>
 
-      <p className="mt-6 text-muted leading-relaxed max-w-xl">
-        Méreteink európai szabványon alapulnak. A megadott értékek az adott
-        testméretnek megfelelőek — lazább fazonoknál eggyel kisebb, szűkebb
-        szabásoknál eggyel nagyobb méret ajánlott.
-      </p>
+      <p className="mt-6 text-muted leading-relaxed max-w-xl">{c.sizeGuide.intro}</p>
 
       <div className="mt-12 space-y-14">
-        <Table title="Women" head={["Size", "Bust", "Waist", "Hips"]} rows={women} />
-        <Table title="Men" head={["Size", "Chest", "Waist", "Hips"]} rows={men} />
-        <Table title="Denim" head={["Size", "Waist (cm)", "Hips (cm)", "Inseam (cm)"]} rows={denim} />
+        <Table title={c.sizeGuide.women} head={[h.size, h.bust, h.waist, h.hips]} rows={women} />
+        <Table title={c.sizeGuide.men} head={[h.size, h.chest, h.waist, h.hips]} rows={men} />
+        <Table title={c.sizeGuide.denim} head={[h.size, h.waist, h.hips, h.inseam]} rows={denim} />
       </div>
 
       <div className="mt-16 border-t border-line pt-10 text-sm text-muted leading-relaxed">
-        Bizonytalan vagy? Írj nekünk az <a href="mailto:hello@lunara.hu" className="underline">hello@lunara.hu</a> címre, és stílusstábunk segít a méretválasztásban.
+        {c.sizeGuide.unsure}
       </div>
     </section>
   );
@@ -72,8 +74,8 @@ function Table({
         <tbody className="price">
           {rows.map((r) => (
             <tr key={r[0]} className="border-b border-line">
-              {r.map((c, i) => (
-                <td key={i} className="py-2">{c}</td>
+              {r.map((cell, i) => (
+                <td key={i} className="py-2">{cell}</td>
               ))}
             </tr>
           ))}

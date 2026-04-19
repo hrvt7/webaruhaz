@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { DEFAULT_LOCALE, Locale, LOCALES, getDict } from "./dict";
+import { getContent } from "./content";
 
 export async function getLocale(): Promise<Locale> {
   const c = await cookies();
@@ -9,5 +10,5 @@ export async function getLocale(): Promise<Locale> {
 
 export async function getT() {
   const locale = await getLocale();
-  return { locale, t: getDict(locale) };
+  return { locale, t: getDict(locale), c: getContent(locale) };
 }

@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { supabaseServer } from "@/lib/supabase/server";
 import { getT } from "@/i18n/server";
-import { CATEGORY_LABEL } from "@/lib/store";
 
 export const revalidate = 0;
 
 export default async function AdminProductsPage() {
-  const { t } = await getT();
+  const { t, c } = await getT();
   const sb = await supabaseServer();
   const { data: products } = await sb
     .from("products")
@@ -75,7 +74,7 @@ export default async function AdminProductsPage() {
                 </td>
                 <td className="p-4 price text-muted">{p.sku}</td>
                 <td className="p-4 text-muted">
-                  {CATEGORY_LABEL[p.category] ?? p.category}
+                  {c.categoryLabel[p.category as keyof typeof c.categoryLabel] ?? p.category}
                 </td>
                 <td className="p-4 price">
                   {new Intl.NumberFormat("hu-HU").format(p.price)} Ft

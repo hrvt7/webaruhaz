@@ -5,7 +5,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useT } from "@/i18n/provider";
 
 export default function Footer() {
-  const { t } = useT();
+  const { t, c } = useT();
   const cols = [
     {
       title: t.footer.shop,
@@ -24,8 +24,8 @@ export default function Footer() {
         [t.footer.helpLinks.shipping, "/shipping"],
         [t.footer.helpLinks.contact, "/contact"],
         [t.footer.helpLinks.stores, "/stores"],
-        ["ÁSZF", "/aszf"],
-        ["Adatkezelési tájékoztató", "/adatkezeles"],
+        [c.legal.aszf, "/aszf"],
+        [c.legal.privacy, "/adatkezeles"],
       ],
     },
     {

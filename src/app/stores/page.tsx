@@ -1,7 +1,7 @@
 import { getT } from "@/i18n/server";
 
 export default async function StoresPage() {
-  const { t } = await getT();
+  const { t, c } = await getT();
   return (
     <>
       <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-16 md:py-24">
@@ -19,11 +19,11 @@ export default async function StoresPage() {
               className="h-full w-full object-cover"
             />
           </div>
-          <div className="font-display text-2xl">LUNARA Flagship</div>
+          <div className="font-display text-2xl">{c.stores.flagshipName}</div>
           <div className="mt-2 text-sm text-muted leading-relaxed">
-            Bazilika 1051 Budapest<br />
-            Október 6. utca 12.<br />
-            Magyarország
+            {c.stores.address1}<br />
+            {c.stores.address2}<br />
+            {c.stores.address3}
           </div>
           <div className="mt-6 space-y-1 text-sm">
             <div>{t.stores.hoursMonFri}</div>

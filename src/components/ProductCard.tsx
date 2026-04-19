@@ -1,11 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import {
   Product,
   formatHUF,
   productCompareAt,
 } from "@/data/products";
+import { useT } from "@/i18n/provider";
 
 export default function ProductCard({ p }: { p: Product }) {
+  const { c } = useT();
   const compareAt = productCompareAt(p);
   const onSale = compareAt && compareAt > p.price;
   return (
@@ -39,7 +43,7 @@ export default function ProductCard({ p }: { p: Product }) {
             {p.name}
           </div>
           <div className="mt-1 text-[11px] tracking-widest-2 uppercase text-muted">
-            {p.colors.length} {p.colors.length === 1 ? "colour" : "colours"}
+            {p.colors.length} {p.colors.length === 1 ? c.productCard.colour : c.productCard.colours}
           </div>
         </div>
         <div className="text-right shrink-0">

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ChevronDown, Heart, Ruler } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import {
-  CATEGORY_LABEL,
   COLOR_HEX,
   Product,
   formatHUF,
@@ -14,6 +13,7 @@ import {
   productShortDesc,
 } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
+import { useT } from "@/i18n/provider";
 
 export default function ProductDetail({
   product: p,
@@ -22,6 +22,7 @@ export default function ProductDetail({
   product: Product;
   related: Product[];
 }) {
+  const { t, c } = useT();
   const { add, setOpen } = useCart();
   const [color, setColor] = useState(p.colors[0]);
   const [size, setSize] = useState<string | null>(
@@ -84,7 +85,7 @@ export default function ProductDetail({
           <nav className="text-[11px] tracking-widest-2 uppercase text-muted mb-4">
             <Link href="/shop" className="hover:text-ink">Shop</Link>
             <span className="mx-2">/</span>
-            <span>{CATEGORY_LABEL[p.category] ?? p.category}</span>
+            <span>{c.categoryLabel[p.category as keyof typeof c.categoryLabel] ?? p.category}</span>
           </nav>
 
           {p.badge && (

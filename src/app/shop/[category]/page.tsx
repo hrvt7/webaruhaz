@@ -1,13 +1,7 @@
 import { notFound } from "next/navigation";
 import ShopGrid from "@/components/shop/ShopGrid";
 import { getAllProducts, getProducts } from "@/lib/store";
-
-const TITLES: Record<string, { title: string; subtitle: string }> = {
-  women: { title: "Női", subtitle: "Kifinomult alapdarabok — felsők, nadrágok, ruhák, kabátok." },
-  men: { title: "Férfi", subtitle: "Férfi alapdarabok — tailoring, kötöttáruk, denim." },
-  accessories: { title: "Kiegészítők", subtitle: "Bőr, kasmír, acél. Kézzel készült részletek." },
-  sale: { title: "Kiárusítás", subtitle: "Előző szezon, korlátozott darabszám. A minőség ugyanaz." },
-};
+import { getT } from "@/i18n/server";
 
 export const revalidate = 30;
 
@@ -21,7 +15,8 @@ export default async function CategoryPage({
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  const meta = TITLES[category];
+  const { c } = await getT();
+  const meta = c.categoryPage[category as keyof typeof c.categoryPage];
   if (!meta) notFound();
 
   let list;

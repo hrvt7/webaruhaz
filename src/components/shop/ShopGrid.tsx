@@ -4,11 +4,11 @@ import { useMemo, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import {
-  CATEGORY_LABEL,
   COLOR_HEX,
   PRICE_RANGE,
   Product,
 } from "@/data/products";
+import { useT } from "@/i18n/provider";
 
 type Sort = "newest" | "price-asc" | "price-desc" | "bestseller";
 
@@ -23,13 +23,14 @@ export default function ShopGrid({
   initial: Product[];
   hideCategoryFilter?: boolean;
 }) {
+  const { t, c } = useT();
   const categoryOptions = useMemo(
     () =>
-      Array.from(new Set(initial.map((p) => p.category))).map((c) => ({
-        value: c,
-        label: CATEGORY_LABEL[c] ?? c,
+      Array.from(new Set(initial.map((p) => p.category))).map((code) => ({
+        value: code,
+        label: c.categoryLabel[code as keyof typeof c.categoryLabel] ?? code,
       })),
-    [initial],
+    [initial, c],
   );
 
   const allColors = useMemo(
@@ -98,23 +99,23 @@ export default function ShopGrid({
           onClick={() => setFilterOpen(true)}
           className="text-[11px] tracking-widest-2 uppercase flex items-center gap-2"
         >
-          Filter {activeCount > 0 && <span className="text-muted">({activeCount})</span>}
+          {t.shop.filter} {activeCount > 0 && <span className="text-muted">({activeCount})</span>}
         </button>
         <div className="text-[11px] tracking-widest-2 uppercase text-muted">
-          {filtered.length} products
+          {filtered.length} {t.shop.products}
         </div>
         <label className="text-[11px] tracking-widest-2 uppercase flex items-center gap-2">
-          <span className="hidden sm:inline">Sort</span>
+          <span className="hidden sm:inline">{t.shop.sort}</span>
           <div className="relative">
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as Sort)}
               className="appearance-none bg-transparent pr-5 text-[11px] tracking-widest-2 uppercase cursor-pointer outline-none"
             >
-              <option value="newest">Newest</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="bestseller">Bestseller</option>
+              <option value="newest">{t.shop.newest}</option>
+              <option value="price-asc">{t.shop.priceAsc}</option>
+              <option value="price-desc">{t.shop.priceDesc}</option>
+              <option value="bestseller">{t.shop.bestseller}</option>
             </select>
             <ChevronDown
               size={12}
@@ -152,7 +153,7 @@ export default function ShopGrid({
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center py-20 text-muted text-sm">
-              Nincs termék a szűrésre. Próbálj meg törölni néhány feltételt.
+              {t.shop.noResults}
             </div>
           )}
         </div>
@@ -166,7 +167,7 @@ export default function ShopGrid({
           />
           <div className="relative ml-auto w-full max-w-[360px] bg-white h-full flex flex-col">
             <div className="h-[64px] px-6 flex items-center justify-between border-b border-line">
-              <div className="font-display text-lg tracking-widest-2">FILTER</div>
+              <div className="font-display text-lg tracking-widest-2">{t.shop.filter.toUpperCase()}</div>
               <button
                 onClick={() => setFilterOpen(false)}
                 className="h-9 w-9 -mr-2 grid place-items-center"
@@ -198,13 +199,13 @@ export default function ShopGrid({
                 onClick={clearAll}
                 className="border border-line py-3 text-[11px] tracking-widest-2 uppercase"
               >
-                Clear
+                {t.shop.clear}
               </button>
               <button
                 onClick={() => setFilterOpen(false)}
                 className="bg-ink text-white py-3 text-[11px] tracking-widest-2 uppercase"
               >
-                Apply
+                {t.shop.apply}
               </button>
             </div>
           </div>
@@ -247,10 +248,11 @@ function Filters({
   toggle: (arr: string[], set: (v: string[]) => void, v: string) => void;
   clearAll: () => void;
 }) {
+  const { t } = useT();
   return (
     <div className="space-y-8 text-sm">
       {!hideCategoryFilter && categoryOptions.length > 1 && (
-        <Group title="Category">
+        <Group title={t.shop.category}>
           <div className="space-y-2">
             {categoryOptions.map((c) => (
               <label
@@ -270,7 +272,7 @@ function Filters({
         </Group>
       )}
 
-      <Group title="Size">
+      <Group title={t.shop.size}>
         <div className="grid grid-cols-4 gap-2">
           {allSizes.map((s) => (
             <button
@@ -288,7 +290,7 @@ function Filters({
         </div>
       </Group>
 
-      <Group title="Colour">
+      <Group title={t.shop.colour}>
         <div className="flex flex-wrap gap-2">
           {allColors.map((c) => (
             <button
@@ -306,7 +308,7 @@ function Filters({
         </div>
       </Group>
 
-      <Group title="Price">
+      <Group title={t.shop.price}>
         <input
           type="range"
           min={5000}
@@ -326,7 +328,7 @@ function Filters({
         onClick={clearAll}
         className="text-[11px] tracking-widest-2 uppercase text-muted hover:text-ink"
       >
-        Clear all filters
+        {t.shop.clearAll}
       </button>
     </div>
   );
