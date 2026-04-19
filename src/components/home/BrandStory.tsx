@@ -20,16 +20,16 @@ export default function BrandStory({ data }: { data: LandingContent["brand_story
           className="h-full w-full object-cover"
         />
       </div>
-      <div>
+      <div className="text-center md:text-left">
         <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-5">
           {t.home.ourStory}
         </div>
         <h2 className="font-display text-4xl md:text-5xl leading-[1.05] whitespace-pre-line">
           {data.title}
         </h2>
-        <p className="mt-6 text-muted leading-relaxed max-w-md">{data.body_1}</p>
+        <p className="mt-6 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{data.body_1}</p>
         {data.body_2 && (
-          <p className="mt-4 text-muted leading-relaxed max-w-md">{data.body_2}</p>
+          <p className="mt-4 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{data.body_2}</p>
         )}
         <Link
           href="/about"

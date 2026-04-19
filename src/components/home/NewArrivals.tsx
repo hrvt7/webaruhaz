@@ -11,7 +11,7 @@ export default function NewArrivals({ items }: { items: Product[] }) {
     <section className="bg-bone py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 mb-10">
         <div className="flex items-end justify-between">
-          <div>
+          <div className="text-center md:text-left w-full md:w-auto">
             <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
               {t.home.justIn}
             </div>

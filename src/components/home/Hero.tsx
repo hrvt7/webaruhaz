@@ -17,7 +17,7 @@ export default function Hero({ data, dict }: { data: LandingContent["hero"]; dic
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/10" />
 
       <div className="relative z-10 mx-auto max-w-[1440px] h-full px-6 md:px-10 flex items-end md:items-center pb-16 md:pb-0">
-        <div className="max-w-2xl text-white">
+        <div className="max-w-2xl text-white text-center md:text-left mx-auto md:mx-0">
           {data.overline && (
             <div className="text-[11px] tracking-widest-3 uppercase mb-6 opacity-90">
               {data.overline}
@@ -26,10 +26,10 @@ export default function Hero({ data, dict }: { data: LandingContent["hero"]; dic
           <h1 className="font-display text-5xl md:text-7xl lg:text-[88px] leading-[0.95] tracking-tight">
             {data.title_line_1} <br /> {data.title_line_2}
           </h1>
-          <p className="mt-6 text-sm md:text-base max-w-md opacity-90 leading-relaxed">
+          <p className="mt-6 text-sm md:text-base max-w-md mx-auto md:mx-0 opacity-90 leading-relaxed">
             {data.subtitle}
           </p>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-3 justify-center md:justify-start">
             <Link
               href="/shop/women"
               className="bg-white text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-bone transition-colors"
