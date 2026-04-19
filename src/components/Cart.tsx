@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCart, lineKey } from "@/context/CartContext";
 import { formatHUF } from "@/data/products";
 import { useT } from "@/i18n/provider";
+import PaymentBadges from "@/components/PaymentBadges";
 
 const PHONE_RAW = "36305252336";
 const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
@@ -273,15 +274,21 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
               </div>
 
               {STRIPE_ENABLED && (
-                <button
-                  type="button"
-                  onClick={() => accepted && payWithCard()}
-                  disabled={!accepted || busy !== null}
-                  className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
-                >
-                  <CreditCard size={14} strokeWidth={1.6} />
-                  {busy === "card" ? "..." : "Bankkártyás fizetés · Apple Pay · Google Pay"}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => accepted && payWithCard()}
+                    disabled={!accepted || busy !== null}
+                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                  >
+                    <CreditCard size={14} strokeWidth={1.6} />
+                    {busy === "card" ? "..." : "Bankkártyás fizetés"}
+                  </button>
+                  <PaymentBadges />
+                  <div className="text-center text-[10px] tracking-widest-2 uppercase text-muted">
+                    Biztonságos fizetés · Stripe
+                  </div>
+                </>
               )}
 
               <button

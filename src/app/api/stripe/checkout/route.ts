@@ -16,8 +16,11 @@ export async function POST(req: Request) {
   const stripe = getStripe();
   if (!stripe) {
     return NextResponse.json(
-      { error: "Stripe nincs beállítva (hiányzó STRIPE_SECRET_KEY)." },
-      { status: 500 },
+      {
+        error:
+          "Demo mód — a bankkártyás fizetés hamarosan aktív. Jelenleg kérjük, rendelj WhatsApp-on, 1 percen belül visszajelzünk.",
+      },
+      { status: 503 },
     );
   }
 
