@@ -5,6 +5,7 @@ import NewArrivals from "@/components/home/NewArrivals";
 import BrandStory from "@/components/home/BrandStory";
 import CollectionHighlight from "@/components/home/CollectionHighlight";
 import EditorialGrid from "@/components/home/EditorialGrid";
+import Partnership from "@/components/home/Partnership";
 import Newsletter from "@/components/home/Newsletter";
 import { getLanding, getAllProducts } from "@/lib/store";
 import { getT } from "@/i18n/server";
@@ -27,6 +28,7 @@ export default async function Home() {
       <BrandStory data={landing.brand_story} />
       <CollectionHighlight data={landing.collection_highlight} />
       <EditorialGrid data={landing.editorial} />
+      <Partnership />
       <Newsletter />
     </>
   );
