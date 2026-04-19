@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
-import { products, findProduct, related as rel } from "@/data/products";
+import { getProductBySlug, getRelated } from "@/lib/store";
 import ProductDetail from "@/components/shop/ProductDetail";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
-}
+export const revalidate = 30;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -12,8 +11,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = findProduct(slug);
-  return { title: p?.name ?? "Product" };
+  const p = await getProductBySlug(slug);
+  return { title: p?.name ?? "Termék" };
 }
 
 export default async function ProductPage({
@@ -22,7 +21,8 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = findProduct(slug);
+  const p = await getProductBySlug(slug);
   if (!p) notFound();
-  return <ProductDetail product={p} related={rel(p, 4)} />;
+  const related = await getRelated(p, 4);
+  return <ProductDetail product={p} related={related} />;
 }

@@ -1,24 +1,27 @@
-import Link from "next/link";
-import { products } from "@/data/products";
-import ProductCard from "@/components/ProductCard";
+"use client";
 
-export default function NewArrivals() {
-  const items = products.slice(0, 8);
+import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
+import { Product } from "@/data/products";
+import { useT } from "@/i18n/provider";
+
+export default function NewArrivals({ items }: { items: Product[] }) {
+  const { t } = useT();
   return (
     <section className="bg-bone py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10">
         <div className="flex items-end justify-between mb-10">
           <div>
             <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
-              Just In
+              {t.home.justIn}
             </div>
-            <h2 className="font-display text-3xl md:text-5xl">New arrivals</h2>
+            <h2 className="font-display text-3xl md:text-5xl">{t.home.newArrivals}</h2>
           </div>
           <Link
             href="/shop?sort=newest"
             className="text-[11px] tracking-widest-2 uppercase hover:opacity-60"
           >
-            View all →
+            {t.home.viewAll}
           </Link>
         </div>
 

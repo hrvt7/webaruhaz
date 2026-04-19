@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { Product, formatHUF } from "@/data/products";
+import {
+  Product,
+  formatHUF,
+  productCompareAt,
+} from "@/data/products";
 
 export default function ProductCard({ p }: { p: Product }) {
-  const onSale = p.compareAt && p.compareAt > p.price;
+  const compareAt = productCompareAt(p);
+  const onSale = compareAt && compareAt > p.price;
   return (
     <Link href={`/product/${p.slug}`} className="group block">
       <div className="hover-zoom relative aspect-[3/4] bg-bone overflow-hidden">
@@ -42,7 +47,7 @@ export default function ProductCard({ p }: { p: Product }) {
             <>
               <div className="price text-sm text-sale">{formatHUF(p.price)}</div>
               <div className="price text-[11px] text-muted line-through">
-                {formatHUF(p.compareAt!)}
+                {formatHUF(compareAt!)}
               </div>
             </>
           ) : (

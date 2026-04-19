@@ -1,46 +1,53 @@
-import Link from "next/link";
+"use client";
 
-const cols = [
-  {
-    title: "Shop",
-    links: [
-      ["Women", "/shop/women"],
-      ["Men", "/shop/men"],
-      ["Accessories", "/shop/accessories"],
-      ["Sale", "/shop/sale"],
-      ["New arrivals", "/shop?sort=newest"],
-    ],
-  },
-  {
-    title: "Help",
-    links: [
-      ["Size guide", "/size-guide"],
-      ["Shipping & returns", "/shipping"],
-      ["Contact", "/contact"],
-      ["Stores", "/stores"],
-    ],
-  },
-  {
-    title: "LUNARA",
-    links: [
-      ["About", "/about"],
-      ["Collections", "/collections/spring-2026"],
-      ["Journal", "#"],
-      ["Sustainability", "#"],
-    ],
-  },
-];
+import Link from "next/link";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useT } from "@/i18n/provider";
 
 export default function Footer() {
+  const { t } = useT();
+  const cols = [
+    {
+      title: t.footer.shop,
+      links: [
+        [t.footer.shopLinks.women, "/shop/women"],
+        [t.footer.shopLinks.men, "/shop/men"],
+        [t.footer.shopLinks.accessories, "/shop/accessories"],
+        [t.footer.shopLinks.sale, "/shop/sale"],
+        [t.footer.shopLinks.newArrivals, "/shop?sort=newest"],
+      ],
+    },
+    {
+      title: t.footer.help,
+      links: [
+        [t.footer.helpLinks.sizeGuide, "/size-guide"],
+        [t.footer.helpLinks.shipping, "/shipping"],
+        [t.footer.helpLinks.contact, "/contact"],
+        [t.footer.helpLinks.stores, "/stores"],
+      ],
+    },
+    {
+      title: t.footer.lunara,
+      links: [
+        [t.footer.brandLinks.about, "/about"],
+        [t.footer.brandLinks.collections, "/collections/spring-2026"],
+        [t.footer.brandLinks.journal, "#"],
+        [t.footer.brandLinks.sustainability, "#"],
+      ],
+    },
+  ];
+
   return (
     <footer className="bg-bone border-t border-line mt-24">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 py-16 grid gap-12 lg:grid-cols-[1.3fr_repeat(3,1fr)_1.3fr]">
         <div>
           <div className="font-display text-2xl tracking-[0.25em]">LUNARA</div>
           <p className="mt-4 text-sm text-muted max-w-xs leading-relaxed">
-            Modern wardrobe essentials. Minimalista prémium divat, tartós alapdarabok.
-            Budapest.
+            {t.footer.tagline}
           </p>
+          <div className="mt-6">
+            <LanguageSwitcher />
+          </div>
         </div>
 
         {cols.map((c) => (
@@ -61,7 +68,9 @@ export default function Footer() {
         ))}
 
         <div>
-          <div className="text-[11px] tracking-widest-2 uppercase mb-4">Follow</div>
+          <div className="text-[11px] tracking-widest-2 uppercase mb-4">
+            {t.footer.follow}
+          </div>
           <div className="flex items-center gap-3 text-muted">
             <a
               href="https://instagram.com/lunara.hu"
@@ -90,14 +99,14 @@ export default function Footer() {
           </div>
           <div className="mt-6 text-xs text-muted leading-relaxed">
             hello@lunara.hu<br />
-            +36 30 123 4567
+            +36 30 525 2336
           </div>
         </div>
       </div>
 
       <div className="border-t border-line">
         <div className="mx-auto max-w-[1440px] px-6 md:px-10 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-[11px] tracking-widest-2 uppercase text-muted">
-          <div>© {new Date().getFullYear()} LUNARA. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} LUNARA. {t.footer.allRights}</div>
           <div className="flex items-center gap-4">
             <span>Visa</span>
             <span>Mastercard</span>

@@ -1,11 +1,12 @@
-export const metadata = { title: "Stores" };
+import { getT } from "@/i18n/server";
 
-export default function StoresPage() {
+export default async function StoresPage() {
+  const { t } = await getT();
   return (
     <>
       <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-16 md:py-24">
-        <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">Find us</div>
-        <h1 className="font-display text-5xl md:text-7xl">Stores</h1>
+        <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">{t.stores.findUs}</div>
+        <h1 className="font-display text-5xl md:text-7xl">{t.stores.title}</h1>
       </section>
 
       <section className="mx-auto max-w-[1440px] px-6 md:px-10 pb-24 grid md:grid-cols-2 gap-10">
@@ -25,12 +26,12 @@ export default function StoresPage() {
             Magyarország
           </div>
           <div className="mt-6 space-y-1 text-sm">
-            <div>H–P 10:00 – 19:00</div>
-            <div>Szo 10:00 – 17:00</div>
-            <div className="text-muted">V zárva</div>
+            <div>{t.stores.hoursMonFri}</div>
+            <div>{t.stores.hoursSat}</div>
+            <div className="text-muted">{t.stores.hoursSun}</div>
           </div>
           <div className="mt-6 text-sm">
-            <a href="tel:+36301234567" className="underline">+36 30 123 4567</a><br />
+            <a href="tel:+36305252336" className="underline">+36 30 525 2336</a><br />
             <a href="mailto:hello@lunara.hu" className="underline">hello@lunara.hu</a>
           </div>
         </div>

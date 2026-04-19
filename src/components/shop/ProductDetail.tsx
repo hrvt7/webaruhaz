@@ -9,6 +9,9 @@ import {
   COLOR_HEX,
   Product,
   formatHUF,
+  productCompareAt,
+  productLongDesc,
+  productShortDesc,
 } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
@@ -27,7 +30,8 @@ export default function ProductDetail({
   const [qty, setQty] = useState(1);
   const [openAcc, setOpenAcc] = useState<string | null>("description");
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-  const onSale = p.compareAt && p.compareAt > p.price;
+  const compareAt = productCompareAt(p);
+  const onSale = compareAt && compareAt > p.price;
 
   const addToBag = () => {
     if (!size) return;
@@ -67,7 +71,6 @@ export default function ProductDetail({
   return (
     <>
       <div className="mx-auto max-w-[1440px] px-4 md:px-10 py-6 md:py-10 grid lg:grid-cols-[1fr_480px] gap-10">
-        {/* gallery */}
         <div className="space-y-2 md:space-y-3">
           {p.images.map((src, i) => (
             <div key={i} className="aspect-[3/4] bg-bone overflow-hidden">
@@ -77,12 +80,11 @@ export default function ProductDetail({
           ))}
         </div>
 
-        {/* info */}
         <div className="lg:sticky lg:top-24 h-fit">
           <nav className="text-[11px] tracking-widest-2 uppercase text-muted mb-4">
             <Link href="/shop" className="hover:text-ink">Shop</Link>
             <span className="mx-2">/</span>
-            <span>{CATEGORY_LABEL[p.category]}</span>
+            <span>{CATEGORY_LABEL[p.category] ?? p.category}</span>
           </nav>
 
           {p.badge && (
@@ -98,7 +100,7 @@ export default function ProductDetail({
               <>
                 <span className="price text-xl text-sale">{formatHUF(p.price)}</span>
                 <span className="price text-sm text-muted line-through">
-                  {formatHUF(p.compareAt!)}
+                  {formatHUF(compareAt!)}
                 </span>
               </>
             ) : (
@@ -106,9 +108,8 @@ export default function ProductDetail({
             )}
           </div>
 
-          <p className="mt-5 text-sm text-muted leading-relaxed">{p.shortDesc}</p>
+          <p className="mt-5 text-sm text-muted leading-relaxed">{productShortDesc(p)}</p>
 
-          {/* colors */}
           <div className="mt-8">
             <div className="flex items-center justify-between text-[11px] tracking-widest-2 uppercase mb-3">
               <span>Colour — <span className="text-muted normal-case tracking-normal">{color}</span></span>
@@ -130,7 +131,6 @@ export default function ProductDetail({
             </div>
           </div>
 
-          {/* sizes */}
           <div className="mt-8">
             <div className="flex items-center justify-between text-[11px] tracking-widest-2 uppercase mb-3">
               <span>Size</span>
@@ -161,7 +161,6 @@ export default function ProductDetail({
             )}
           </div>
 
-          {/* qty */}
           <div className="mt-6 flex items-center gap-3">
             <div className="text-[11px] tracking-widest-2 uppercase">Qty</div>
             <div className="inline-flex border border-line">
@@ -183,7 +182,6 @@ export default function ProductDetail({
             </div>
           </div>
 
-          {/* actions */}
           <button
             onClick={addToBag}
             disabled={!size}
@@ -195,9 +193,8 @@ export default function ProductDetail({
             <Heart size={14} strokeWidth={1.4} /> Add to wishlist
           </button>
 
-          {/* accordions */}
           <div className="mt-10">
-            {acc("description", "Description", p.longDesc)}
+            {acc("description", "Description", productLongDesc(p))}
             {acc(
               "materials",
               "Materials",
@@ -223,7 +220,6 @@ export default function ProductDetail({
         </div>
       </div>
 
-      {/* related */}
       <section className="mx-auto max-w-[1440px] px-4 md:px-10 py-20">
         <h2 className="font-display text-2xl md:text-3xl mb-8">You may also like</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -233,7 +229,6 @@ export default function ProductDetail({
         </div>
       </section>
 
-      {/* size guide modal */}
       {sizeGuideOpen && (
         <div className="fixed inset-0 z-50 bg-ink/40 grid place-items-center p-4">
           <div className="bg-white max-w-xl w-full max-h-[80vh] overflow-y-auto p-8">

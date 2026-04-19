@@ -1,38 +1,33 @@
-import Link from "next/link";
+"use client";
 
-export default function BrandStory() {
+import Link from "next/link";
+import { LandingContent } from "@/lib/store";
+import { useT } from "@/i18n/provider";
+
+export default function BrandStory({ data }: { data: LandingContent["brand_story"] }) {
+  const { t } = useT();
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-32 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div className="aspect-[4/5] bg-bone overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&q=80&auto=format&fit=crop"
-          alt="Atelier"
-          className="h-full w-full object-cover"
-        />
+        <img src={data.image} alt="Atelier" className="h-full w-full object-cover" />
       </div>
       <div>
         <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-5">
-          Our story
+          {t.home.ourStory}
         </div>
-        <h2 className="font-display text-4xl md:text-5xl leading-[1.05]">
-          Crafted in Europe.<br />
-          Built to last.
+        <h2 className="font-display text-4xl md:text-5xl leading-[1.05] whitespace-pre-line">
+          {data.title}
         </h2>
-        <p className="mt-6 text-muted leading-relaxed max-w-md">
-          A LUNARA 2020-ban indult Budapesten, azzal a szándékkal, hogy csendes,
-          minimalista alapdarabokat kínáljon a zsúfolt piac helyett. Minden darab
-          európai műhelyekben, válogatott szövetekből készül — úgy, hogy évekig
-          szolgáljon.
-        </p>
-        <p className="mt-4 text-muted leading-relaxed max-w-md">
-          A wardrobe nem trend kérdése. A wardrobe egy hosszú döntéssorozat.
-        </p>
+        <p className="mt-6 text-muted leading-relaxed max-w-md">{data.body_1}</p>
+        {data.body_2 && (
+          <p className="mt-4 text-muted leading-relaxed max-w-md">{data.body_2}</p>
+        )}
         <Link
           href="/about"
           className="inline-block mt-10 border border-ink text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-ink hover:text-white transition-colors"
         >
-          Read more
+          {t.home.readMore}
         </Link>
       </div>
     </section>

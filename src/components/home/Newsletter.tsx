@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useT } from "@/i18n/provider";
 
 export default function Newsletter() {
+  const { t } = useT();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
@@ -10,19 +12,16 @@ export default function Newsletter() {
     <section className="bg-ink text-white py-24">
       <div className="mx-auto max-w-2xl px-6 text-center">
         <div className="text-[11px] tracking-widest-3 uppercase opacity-70 mb-5">
-          The Journal
+          {t.home.theJournal}
         </div>
         <h2 className="font-display text-3xl md:text-5xl leading-tight">
-          Join the LUNARA journal
+          {t.home.joinJournal}
         </h2>
         <p className="mt-5 text-sm md:text-base opacity-80 max-w-md mx-auto">
-          Új kollekciók, editorialok és csendes ajánlatok — havonta egyszer,
-          nem többször.
+          {t.home.journalSub}
         </p>
         {sent ? (
-          <div className="mt-10 text-sm opacity-90">
-            Köszönjük! Hamarosan jelentkezünk.
-          </div>
+          <div className="mt-10 text-sm opacity-90">{t.home.thanksSubscribe}</div>
         ) : (
           <form
             onSubmit={(e) => {
@@ -36,11 +35,11 @@ export default function Newsletter() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your email"
+              placeholder={t.home.yourEmail}
               className="flex-1 bg-transparent border-b border-white/40 focus:border-white py-2 text-sm outline-none text-center sm:text-left"
             />
             <button className="bg-white text-ink text-[11px] tracking-widest-2 uppercase px-6 py-3 hover:bg-bone transition-colors">
-              Subscribe
+              {t.home.subscribe}
             </button>
           </form>
         )}

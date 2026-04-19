@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Cart from "@/components/Cart";
+import SiteChrome from "@/components/SiteChrome";
+import { I18nProvider } from "@/i18n/provider";
+import { getT } from "@/i18n/server";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,20 +27,13 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lunara.vercel.app"),
+  metadataBase: new URL("https://webaruhaz-gamma.vercel.app"),
   title: {
     default: "LUNARA — Modern wardrobe essentials",
     template: "%s · LUNARA",
   },
   description:
     "LUNARA — minimalista prémium divat. Válogatott, tartós alapdarabok nőknek és férfiaknak. Budapest.",
-  keywords: [
-    "lunara",
-    "minimalist fashion",
-    "wardrobe essentials",
-    "prémium divat",
-    "budapest",
-  ],
   openGraph: {
     title: "LUNARA — Modern wardrobe essentials",
     description: "Minimalista prémium divat. Budapest.",
@@ -49,12 +42,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const { locale } = await getT();
   return (
     <html
-      lang="hu"
+      lang={locale}
       className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <head>
@@ -65,10 +59,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "LUNARA",
-              url: "https://lunara.vercel.app",
-              logo: "https://lunara.vercel.app/logo.svg",
               email: "hello@lunara.hu",
-              telephone: "+36 30 123 4567",
+              telephone: "+36 30 525 2336",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "Budapest",
@@ -83,12 +75,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white text-ink">
-        <CartProvider>
-          <Header />
-          <main className="flex-1 pt-[64px]">{children}</main>
-          <Footer />
-          <Cart />
-        </CartProvider>
+        <I18nProvider locale={locale}>
+          <CartProvider>
+            <SiteChrome>{children}</SiteChrome>
+          </CartProvider>
+        </I18nProvider>
       </body>
     </html>
   );

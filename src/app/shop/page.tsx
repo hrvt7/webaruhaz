@@ -1,9 +1,11 @@
 import ShopGrid from "@/components/shop/ShopGrid";
-import { products } from "@/data/products";
+import { getAllProducts } from "@/lib/store";
 
 export const metadata = { title: "Shop all" };
+export const revalidate = 30;
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const products = await getAllProducts();
   return (
     <ShopGrid
       title="Shop all"

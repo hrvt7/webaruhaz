@@ -6,16 +6,26 @@ import BrandStory from "@/components/home/BrandStory";
 import CollectionHighlight from "@/components/home/CollectionHighlight";
 import EditorialGrid from "@/components/home/EditorialGrid";
 import Newsletter from "@/components/home/Newsletter";
+import { getLanding, getAllProducts } from "@/lib/store";
+import { getT } from "@/i18n/server";
 
-export default function Home() {
+export const revalidate = 30;
+
+export default async function Home() {
+  const [{ t }, landing, allProducts] = await Promise.all([
+    getT(),
+    getLanding(),
+    getAllProducts(),
+  ]);
+  const newArrivals = allProducts.slice(0, 8);
   return (
     <>
-      <Hero />
+      <Hero data={landing.hero} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
       <Marquee />
       <CategoryGrid />
-      <NewArrivals />
-      <BrandStory />
-      <CollectionHighlight />
+      <NewArrivals items={newArrivals} />
+      <BrandStory data={landing.brand_story} />
+      <CollectionHighlight data={landing.collection_highlight} />
       <EditorialGrid />
       <Newsletter />
     </>

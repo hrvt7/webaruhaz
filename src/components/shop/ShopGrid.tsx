@@ -6,10 +6,8 @@ import ProductCard from "@/components/ProductCard";
 import {
   CATEGORY_LABEL,
   COLOR_HEX,
+  PRICE_RANGE,
   Product,
-  allColors,
-  allSizes,
-  priceRange,
 } from "@/data/products";
 
 type Sort = "newest" | "price-asc" | "price-desc" | "bestseller";
@@ -29,15 +27,28 @@ export default function ShopGrid({
     () =>
       Array.from(new Set(initial.map((p) => p.category))).map((c) => ({
         value: c,
-        label: CATEGORY_LABEL[c],
+        label: CATEGORY_LABEL[c] ?? c,
       })),
+    [initial],
+  );
+
+  const allColors = useMemo(
+    () => Array.from(new Set(initial.flatMap((p) => p.colors))).sort(),
+    [initial],
+  );
+  const allSizes = useMemo(
+    () => Array.from(new Set(initial.flatMap((p) => p.sizes))),
+    [initial],
+  );
+  const maxPrice = useMemo(
+    () => Math.max(PRICE_RANGE.max, ...initial.map((p) => p.price)),
     [initial],
   );
 
   const [cats, setCats] = useState<string[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
-  const [priceMax, setPriceMax] = useState(priceRange.max);
+  const [priceMax, setPriceMax] = useState(maxPrice);
   const [sort, setSort] = useState<Sort>("newest");
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -60,13 +71,13 @@ export default function ShopGrid({
   }, [initial, cats, sizes, colors, priceMax, sort]);
 
   const activeCount =
-    cats.length + sizes.length + colors.length + (priceMax < priceRange.max ? 1 : 0);
+    cats.length + sizes.length + colors.length + (priceMax < maxPrice ? 1 : 0);
 
   const clearAll = () => {
     setCats([]);
     setSizes([]);
     setColors([]);
-    setPriceMax(priceRange.max);
+    setPriceMax(maxPrice);
   };
 
   const toggle = (arr: string[], set: (v: string[]) => void, v: string) =>
@@ -119,6 +130,9 @@ export default function ShopGrid({
           <Filters
             categoryOptions={categoryOptions}
             hideCategoryFilter={hideCategoryFilter}
+            allColors={allColors}
+            allSizes={allSizes}
+            maxPrice={maxPrice}
             cats={cats}
             sizes={sizes}
             colors={colors}
@@ -144,7 +158,6 @@ export default function ShopGrid({
         </div>
       </div>
 
-      {/* Mobile filter drawer */}
       {filterOpen && (
         <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
@@ -165,6 +178,9 @@ export default function ShopGrid({
               <Filters
                 categoryOptions={categoryOptions}
                 hideCategoryFilter={hideCategoryFilter}
+                allColors={allColors}
+                allSizes={allSizes}
+                maxPrice={maxPrice}
                 cats={cats}
                 sizes={sizes}
                 colors={colors}
@@ -201,6 +217,9 @@ export default function ShopGrid({
 function Filters({
   categoryOptions,
   hideCategoryFilter,
+  allColors,
+  allSizes,
+  maxPrice,
   cats,
   sizes,
   colors,
@@ -214,6 +233,9 @@ function Filters({
 }: {
   categoryOptions: { value: string; label: string }[];
   hideCategoryFilter?: boolean;
+  allColors: string[];
+  allSizes: string[];
+  maxPrice: number;
   cats: string[];
   sizes: string[];
   colors: string[];
@@ -288,7 +310,7 @@ function Filters({
         <input
           type="range"
           min={5000}
-          max={priceRange.max}
+          max={maxPrice}
           step={1000}
           value={priceMax}
           onChange={(e) => setPriceMax(Number(e.target.value))}
