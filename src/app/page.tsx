@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <>
       <Hero data={landing.hero} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
-      <Marquee />
+      <Marquee items={landing.marquee?.items} />
       <CategoryGrid />
       <NewArrivals items={newArrivals} />
       <BrandStory data={landing.brand_story} />

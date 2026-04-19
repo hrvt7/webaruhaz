@@ -103,6 +103,23 @@ export default function LandingForm({
         />
       </Section>
 
+      <Section title="Futó szalag (marquee)">
+        <div className="text-xs text-muted mb-3">
+          A hero alatt ismétlődő szövegek, vesszővel elválasztva. Pl: <em>Magyar márka, Ingyenes szállítás 30.000 Ft felett, 14 napos visszaküldés, Edzésre szabva</em>
+        </div>
+        <Area
+          label="Szövegek (vesszővel elválasztva)"
+          v={(state.marquee?.items ?? []).join(", ")}
+          on={(v) =>
+            setState({
+              ...state,
+              marquee: { items: v.split(",").map((s) => s.trim()).filter(Boolean) },
+            })
+          }
+          rows={3}
+        />
+      </Section>
+
       {error && (
         <div className="text-xs text-sale border border-sale/30 bg-sale/5 px-3 py-2">
           {error}
