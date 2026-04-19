@@ -24,9 +24,17 @@ export default function Newsletter() {
           <div className="mt-10 text-sm opacity-90">{t.home.thanksSubscribe}</div>
         ) : (
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              if (email.trim()) setSent(true);
+              if (!email.trim()) return;
+              try {
+                await fetch("/api/newsletter/subscribe", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify({ email: email.trim(), source: "footer" }),
+                });
+              } catch {}
+              setSent(true);
             }}
             className="mt-10 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
           >
