@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, Minus, Trash2 } from "lucide-react";
+import { X, Plus, Minus, Trash2, CreditCard, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useCart, lineKey } from "@/context/CartContext";
 import { formatHUF } from "@/data/products";
 import { useT } from "@/i18n/provider";
 
 const PHONE_RAW = "36305252336";
+const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
 
 export default function Cart() {
   const { t } = useT();
@@ -15,14 +16,36 @@ export default function Cart() {
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", phone: "", address: "", note: "" });
   const [accepted, setAccepted] = useState(false);
+  const [busy, setBusy] = useState<null | "card" | "whatsapp">(null);
+  const [error, setError] = useState<string | null>(null);
 
   const close = () => {
     setOpen(false);
     setTimeout(() => setStep("bag"), 300);
   };
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const payWithCard = async () => {
+    setBusy("card");
+    setError(null);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ items, customer: form }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error(data.error ?? "Ismeretlen hiba");
+      }
+      window.location.href = data.url;
+    } catch (e) {
+      setError((e as Error).message);
+      setBusy(null);
+    }
+  };
+
+  const orderViaWhatsApp = async () => {
+    setBusy("whatsapp");
     const lines = items
       .map(
         (i) =>
@@ -44,7 +67,6 @@ ${t.whatsapp.phoneLabel}: ${form.phone}
 ${t.whatsapp.addressLabel}: ${form.address}
 ${t.whatsapp.noteLabel}: ${form.note}`;
 
-    // also persist an order to the DB (best-effort, ignore errors)
     try {
       await fetch("/api/orders", {
         method: "POST",
@@ -65,7 +87,16 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
       "_blank",
     );
     setStep("done");
+    setBusy(null);
     clear();
+  };
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!accepted) return;
+    // default path: card if enabled, else WhatsApp
+    if (STRIPE_ENABLED) await payWithCard();
+    else await orderViaWhatsApp();
   };
 
   return (
@@ -184,7 +215,9 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                 </div>
                 <div className="flex items-center justify-between text-xs text-muted">
                   <span>{t.cart.shippingLabel}</span>
-                  <span>{t.cart.shippingValue}</span>
+                  <span>
+                    {subtotal >= 30000 ? "Ingyenes" : "1.690 Ft"}
+                  </span>
                 </div>
                 <button
                   onClick={() => setStep("checkout")}
@@ -207,28 +240,10 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
           <form onSubmit={submit} className="flex-1 flex flex-col">
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               <Field label={t.cart.name} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-              <Field
-                label={t.cart.phone}
-                value={form.phone}
-                onChange={(v) => setForm({ ...form, phone: v })}
-                required
-                type="tel"
-              />
-              <Field
-                label={t.cart.address}
-                value={form.address}
-                onChange={(v) => setForm({ ...form, address: v })}
-                required
-              />
-              <Field
-                label={t.cart.note}
-                value={form.note}
-                onChange={(v) => setForm({ ...form, note: v })}
-                textarea
-              />
-              <div className="text-xs text-muted border border-line p-4 leading-relaxed">
-                {t.cart.infoNote}
-              </div>
+              <Field label={t.cart.phone} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required type="tel" />
+              <Field label={t.cart.address} value={form.address} onChange={(v) => setForm({ ...form, address: v })} required />
+              <Field label={t.cart.note} value={form.note} onChange={(v) => setForm({ ...form, note: v })} textarea />
+
               <label className="flex items-start gap-2 text-xs text-muted leading-relaxed cursor-pointer">
                 <input
                   type="checkbox"
@@ -243,19 +258,46 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                   <a href="/adatkezeles" target="_blank" className="underline">Adatkezelési tájékoztatót</a>.
                 </span>
               </label>
+
+              {error && (
+                <div className="text-xs text-sale border border-sale/30 bg-sale/5 px-3 py-2">
+                  {error}
+                </div>
+              )}
             </div>
+
             <div className="border-t border-line p-6 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span>{t.cart.total}</span>
-                <span className="price">{formatHUF(subtotal)}</span>
+                <span className="price">{formatHUF(subtotal + (subtotal >= 30000 ? 0 : 1690))}</span>
               </div>
+
+              {STRIPE_ENABLED && (
+                <button
+                  type="button"
+                  onClick={() => accepted && payWithCard()}
+                  disabled={!accepted || busy !== null}
+                  className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  <CreditCard size={14} strokeWidth={1.6} />
+                  {busy === "card" ? "..." : "Bankkártyás fizetés · Apple Pay · Google Pay"}
+                </button>
+              )}
+
               <button
-                type="submit"
-                disabled={!accepted}
-                className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed"
+                type="button"
+                onClick={() => accepted && orderViaWhatsApp()}
+                disabled={!accepted || busy !== null}
+                className={`w-full text-[12px] tracking-widest-2 uppercase py-4 disabled:opacity-40 flex items-center justify-center gap-2 ${
+                  STRIPE_ENABLED
+                    ? "border border-line hover:bg-bone"
+                    : "bg-ink text-white hover:bg-accent"
+                }`}
               >
-                {t.cart.placeOrder}
+                <MessageCircle size={14} strokeWidth={1.6} />
+                {busy === "whatsapp" ? "..." : "Rendelés WhatsApp-on"}
               </button>
+
               <button
                 type="button"
                 onClick={() => setStep("bag")}
@@ -303,8 +345,7 @@ function Field({
   type?: string;
   textarea?: boolean;
 }) {
-  const base =
-    "w-full bg-transparent border-b border-line focus:border-ink py-2 text-sm outline-none";
+  const base = "w-full bg-transparent border-b border-line focus:border-ink py-2 text-sm outline-none";
   return (
     <label className="block">
       <div className="text-[11px] tracking-widest-2 uppercase text-muted mb-1">
@@ -312,20 +353,9 @@ function Field({
         {required && " *"}
       </div>
       {textarea ? (
-        <textarea
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          rows={3}
-          className={base}
-        />
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} className={base} />
       ) : (
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          required={required}
-          className={base}
-        />
+        <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} className={base} />
       )}
     </label>
   );
