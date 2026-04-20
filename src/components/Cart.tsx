@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, Minus, Trash2, CreditCard, MessageCircle } from "lucide-react";
+import { X, Plus, Minus, Trash2, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { useCart, lineKey } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
 import { formatMoney, FREE_SHIPPING_THRESHOLD_HUF } from "@/lib/currency";
 import PaymentBadges from "@/components/PaymentBadges";
 
-const PHONE_RAW = "36305252336";
 const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
 
 export default function Cart() {
@@ -17,7 +16,7 @@ export default function Cart() {
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "" });
   const [accepted, setAccepted] = useState(false);
-  const [busy, setBusy] = useState<null | "card" | "whatsapp">(null);
+  const [busy, setBusy] = useState<null | "card">(null);
   const [error, setError] = useState<string | null>(null);
 
   // Kupon UI állapot
@@ -108,67 +107,10 @@ export default function Cart() {
     }
   };
 
-  const orderViaWhatsApp = async () => {
-    setBusy("whatsapp");
-    const lines = items
-      .map(
-        (i) =>
-          `• ${i.name} — ${i.color}, ${i.size} — ${formatMoney(i.price, locale)}${
-            i.qty > 1 ? " × " + i.qty : ""
-          }`,
-      )
-      .join("\n");
-    const message = `${t.whatsapp.greeting}
-
-${t.whatsapp.intro}
-
-${lines}
-
-${t.whatsapp.subtotal}: ${formatMoney(subtotal, locale)}${
-      coupon && discount > 0
-        ? `\nKupon (${coupon.code}): -${formatMoney(discount, locale)}`
-        : ""
-    }
-
-${t.whatsapp.nameLabel}: ${form.name}
-Email: ${form.email}
-${t.whatsapp.phoneLabel}: ${form.phone}
-${t.whatsapp.addressLabel}: ${form.address}
-${t.whatsapp.noteLabel}: ${form.note}`;
-
-    try {
-      await fetch("/api/orders", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          customer_name: form.name,
-          customer_email: form.email,
-          customer_phone: form.phone,
-          customer_address: form.address,
-          note: form.note,
-          items,
-          subtotal,
-          coupon_code: coupon?.code ?? null,
-          discount_amount: discount,
-        }),
-      });
-    } catch {}
-
-    window.open(
-      `https://wa.me/${PHONE_RAW}?text=${encodeURIComponent(message)}`,
-      "_blank",
-    );
-    setStep("done");
-    setBusy(null);
-    clear();
-  };
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!accepted) return;
-    // default path: card if enabled, else WhatsApp
-    if (STRIPE_ENABLED) await payWithCard();
-    else await orderViaWhatsApp();
+    await payWithCard();
   };
 
   return (
@@ -432,37 +374,31 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                 <span className="price">{formatMoney(grandTotal, locale)}</span>
               </div>
 
-              {STRIPE_ENABLED && (
+              <button
+                type="button"
+                onClick={() => accepted && payWithCard()}
+                disabled={!accepted || busy !== null}
+                className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+              >
+                <CreditCard size={14} strokeWidth={1.6} />
+                {busy === "card" ? "..." : c.cardPayment}
+              </button>
+              {STRIPE_ENABLED ? (
                 <>
-                  <button
-                    type="button"
-                    onClick={() => accepted && payWithCard()}
-                    disabled={!accepted || busy !== null}
-                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
-                  >
-                    <CreditCard size={14} strokeWidth={1.6} />
-                    {busy === "card" ? "..." : c.cardPayment}
-                  </button>
                   <PaymentBadges />
                   <div className="text-center text-[10px] tracking-widest-2 uppercase text-muted">
                     {c.secureCheckout}
                   </div>
                 </>
+              ) : (
+                <div className="bg-bone p-3 text-[11px] text-muted text-center">
+                  {locale === "en"
+                    ? "Demo mode — payment activated once Stripe keys are configured."
+                    : locale === "de"
+                      ? "Demo-Modus — Zahlung aktiv, sobald Stripe-Keys konfiguriert sind."
+                      : "Demo mód — a fizetés a Stripe kulcsok beállítása után válik aktívvá."}
+                </div>
               )}
-
-              <button
-                type="button"
-                onClick={() => accepted && orderViaWhatsApp()}
-                disabled={!accepted || busy !== null}
-                className={`w-full text-[12px] tracking-widest-2 uppercase py-4 disabled:opacity-40 flex items-center justify-center gap-2 ${
-                  STRIPE_ENABLED
-                    ? "border border-line hover:bg-bone"
-                    : "bg-ink text-white hover:bg-accent"
-                }`}
-              >
-                <MessageCircle size={14} strokeWidth={1.6} />
-                {busy === "whatsapp" ? "..." : c.whatsappOrder}
-              </button>
 
               <button
                 type="button"
