@@ -6,6 +6,7 @@ import {
   SHIPPING_FEE_HUF,
   hufToEurCents,
 } from "@/lib/currency";
+import { validateCoupon } from "@/lib/coupons";
 
 type Item = {
   slug: string;
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
     items: Item[];
     customer: { name: string; email: string; phone: string; address: string; note: string };
     locale?: "hu" | "en" | "de";
+    coupon?: { code: string } | null;
   };
 
   if (!body.items?.length) {
@@ -45,8 +47,21 @@ export async function POST(req: Request) {
 
   // subtotal is always computed in HUF (DB prices are HUF)
   const subtotalHuf = body.items.reduce((s, i) => s + i.price * i.qty, 0);
-  const shippingHuf = subtotalHuf >= FREE_SHIPPING_THRESHOLD_HUF ? 0 : SHIPPING_FEE_HUF;
-  const totalHuf = subtotalHuf + shippingHuf;
+
+  // Kupon szerver-oldali újraellenőrzése (biztonság — a client payload nem megbízható)
+  let couponDiscountHuf = 0;
+  let couponCode: string | null = null;
+  if (body.coupon?.code) {
+    const check = await validateCoupon(body.coupon.code, subtotalHuf);
+    if (check.ok) {
+      couponDiscountHuf = check.discount;
+      couponCode = check.coupon.code;
+    }
+  }
+
+  const discountedSubtotalHuf = Math.max(0, subtotalHuf - couponDiscountHuf);
+  const shippingHuf = discountedSubtotalHuf >= FREE_SHIPPING_THRESHOLD_HUF ? 0 : SHIPPING_FEE_HUF;
+  const totalHuf = discountedSubtotalHuf + shippingHuf;
 
   // Persist draft order (always in HUF internally)
   const sb = await supabaseServer();
@@ -64,6 +79,8 @@ export async function POST(req: Request) {
       currency,
       status: "pending_payment",
       payment_method: "stripe",
+      coupon_code: couponCode,
+      discount_amount: couponDiscountHuf,
     })
     .select("id")
     .single();
@@ -116,10 +133,29 @@ export async function POST(req: Request) {
     });
   }
 
+  // Ha van kupon, Stripe-ban ad-hoc Coupon objektumot hozunk létre
+  // és hozzákötjük a session-höz (Stripe nem enged negatív line item-et).
+  let stripeCouponId: string | undefined;
+  if (couponDiscountHuf > 0 && couponCode) {
+    try {
+      const stripeCoupon = await stripe.coupons.create({
+        amount_off: toUnit(couponDiscountHuf),
+        currency,
+        duration: "once",
+        name: `${couponCode} — kedvezmény`,
+      });
+      stripeCouponId = stripeCoupon.id;
+    } catch {
+      // Ha Stripe elutasítja (pl. túl nagy kedvezmény), egyszerűen kuponmentes session
+      stripeCouponId = undefined;
+    }
+  }
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
     line_items: lineItems,
+    discounts: stripeCouponId ? [{ coupon: stripeCouponId }] : undefined,
     customer_email: body.customer.email || undefined,
     shipping_address_collection: undefined,
     phone_number_collection: { enabled: false },
@@ -130,6 +166,8 @@ export async function POST(req: Request) {
       customer_phone: body.customer.phone,
       display_currency: currency,
       locale,
+      coupon_code: couponCode ?? "",
+      discount_huf: String(couponDiscountHuf),
     },
     success_url: `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/order/cancel?session_id={CHECKOUT_SESSION_ID}`,

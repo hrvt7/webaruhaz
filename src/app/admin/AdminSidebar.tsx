@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, Layers, Home, Inbox, Mail, Tags } from "lucide-react";
+import { LayoutDashboard, Package, Layers, Home, Inbox, Mail, Tags, Ticket } from "lucide-react";
 
 export default function AdminSidebar({
   labels,
@@ -22,6 +22,7 @@ export default function AdminSidebar({
     { href: "/admin/categories", label: "Kategóriák", icon: Tags },
     { href: "/admin/collections", label: labels.collections, icon: Layers },
     { href: "/admin/landing", label: labels.landing, icon: Home },
+    { href: "/admin/coupons", label: "Kuponok", icon: Ticket },
     { href: "/admin/orders", label: labels.orders, icon: Inbox },
     { href: "/admin/newsletter", label: "Hírlevél", icon: Mail },
   ];

@@ -65,6 +65,12 @@ export async function POST(req: Request) {
           currency: session.currency,
         })
         .eq("stripe_session_id", session.id);
+
+      // Kupon használat inkrementálás (ha volt)
+      const couponCode = session.metadata?.coupon_code;
+      if (couponCode && couponCode.trim()) {
+        await sb.rpc("increment_coupon_use", { coupon_code_in: couponCode });
+      }
     }
   }
 

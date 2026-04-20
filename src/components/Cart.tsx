@@ -13,12 +13,75 @@ const STRIPE_ENABLED = Boolean(process.env.NEXT_PUBLIC_STRIPE_ENABLED === "1");
 
 export default function Cart() {
   const { t, c, locale } = useT();
-  const { items, open, setOpen, inc, dec, remove, subtotal, clear } = useCart();
+  const { items, open, setOpen, inc, dec, remove, subtotal, clear, coupon, discount, setCoupon } = useCart();
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "" });
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState<null | "card" | "whatsapp">(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Kupon UI állapot
+  const [couponInput, setCouponInput] = useState("");
+  const [couponChecking, setCouponChecking] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const shipping = discountedSubtotal >= 30000 ? 0 : 1690;
+  const grandTotal = discountedSubtotal + shipping;
+
+  const couponErrorText = (code: string): string => {
+    if (code.startsWith("MIN_ORDER:")) {
+      const min = Number(code.split(":")[1]);
+      return locale === "en"
+        ? `Minimum order: ${formatMoney(min, locale)}`
+        : locale === "de"
+          ? `Mindestbestellwert: ${formatMoney(min, locale)}`
+          : `Minimum rendelési érték: ${formatMoney(min, locale)}`;
+    }
+    const dict: Record<string, Record<string, string>> = {
+      hu: { NOT_FOUND: "Érvénytelen kuponkód", INACTIVE: "Ez a kupon inaktív", EXPIRED: "Lejárt kupon", USED_UP: "Elfogyott a kupon", EMPTY_CODE: "Adj meg kódot", ZERO_DISCOUNT: "Nem alkalmazható", LOOKUP_FAILED: "Ellenőrzés sikertelen" },
+      en: { NOT_FOUND: "Invalid coupon code", INACTIVE: "Coupon inactive", EXPIRED: "Coupon expired", USED_UP: "Coupon fully redeemed", EMPTY_CODE: "Enter a code", ZERO_DISCOUNT: "Cannot apply", LOOKUP_FAILED: "Validation failed" },
+      de: { NOT_FOUND: "Ungültiger Code", INACTIVE: "Gutschein inaktiv", EXPIRED: "Gutschein abgelaufen", USED_UP: "Gutschein aufgebraucht", EMPTY_CODE: "Code eingeben", ZERO_DISCOUNT: "Nicht anwendbar", LOOKUP_FAILED: "Prüfung fehlgeschlagen" },
+    };
+    return dict[locale][code] ?? code;
+  };
+
+  const applyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const code = couponInput.trim();
+    if (!code) return;
+    setCouponChecking(true);
+    setCouponError(null);
+    try {
+      const r = await fetch("/api/coupon/validate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ code, subtotal }),
+      });
+      const data = await r.json();
+      if (!data.ok) {
+        setCouponError(couponErrorText(String(data.error ?? "NOT_FOUND")));
+        return;
+      }
+      setCoupon({
+        code: data.code,
+        description: data.description ?? "",
+        discount_type: data.discount_type,
+        discount_value: data.discount_value,
+        discount: data.discount,
+      });
+      setCouponInput("");
+    } catch (err) {
+      setCouponError((err as Error).message);
+    } finally {
+      setCouponChecking(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCoupon(null);
+    setCouponError(null);
+  };
 
   const close = () => {
     setOpen(false);
@@ -32,7 +95,7 @@ export default function Cart() {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items, customer: form, locale }),
+        body: JSON.stringify({ items, customer: form, locale, coupon }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
@@ -61,7 +124,11 @@ ${t.whatsapp.intro}
 
 ${lines}
 
-${t.whatsapp.subtotal}: ${formatMoney(subtotal, locale)}
+${t.whatsapp.subtotal}: ${formatMoney(subtotal, locale)}${
+      coupon && discount > 0
+        ? `\nKupon (${coupon.code}): -${formatMoney(discount, locale)}`
+        : ""
+    }
 
 ${t.whatsapp.nameLabel}: ${form.name}
 Email: ${form.email}
@@ -81,6 +148,8 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
           note: form.note,
           items,
           subtotal,
+          coupon_code: coupon?.code ?? null,
+          discount_amount: discount,
         }),
       });
     } catch {}
@@ -237,11 +306,65 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
                   <span>{t.cart.subtotal}</span>
                   <span className="price">{formatMoney(subtotal, locale)}</span>
                 </div>
+
+                {/* Kuponkód blokk */}
+                <div className="border-t border-b border-line py-3 space-y-2">
+                  {coupon ? (
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-ink text-white px-2 py-0.5 text-[10px] tracking-widest-2 uppercase font-mono">
+                            {coupon.code}
+                          </span>
+                          <span className="text-xs text-muted truncate">
+                            {coupon.description}
+                          </span>
+                        </div>
+                        <div className="price text-sale text-xs mt-1">
+                          −{formatMoney(discount, locale)}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="text-[10px] tracking-widest-2 uppercase text-muted hover:text-ink ml-2"
+                        title={locale === "hu" ? "Eltávolítás" : locale === "de" ? "Entfernen" : "Remove"}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={applyCoupon} className="flex gap-2">
+                      <input
+                        value={couponInput}
+                        onChange={(e) => { setCouponInput(e.target.value); setCouponError(null); }}
+                        placeholder={locale === "en" ? "Coupon code" : locale === "de" ? "Gutscheincode" : "Kuponkód"}
+                        className="flex-1 border-b border-line focus:border-ink bg-transparent text-sm py-1 outline-none uppercase tracking-widest-2 font-mono"
+                        maxLength={32}
+                      />
+                      <button
+                        type="submit"
+                        disabled={couponChecking || !couponInput.trim()}
+                        className="text-[10px] tracking-widest-2 uppercase border border-line hover:border-ink px-3 py-1 disabled:opacity-40"
+                      >
+                        {couponChecking ? "…" : locale === "en" ? "Apply" : locale === "de" ? "Anwenden" : "Beváltás"}
+                      </button>
+                    </form>
+                  )}
+                  {couponError && (
+                    <div className="text-[11px] text-sale">{couponError}</div>
+                  )}
+                </div>
+
                 <div className="flex items-center justify-between text-xs text-muted">
                   <span>{t.cart.shippingLabel}</span>
                   <span>
-                    {subtotal >= 30000 ? c.shippingValueFree : c.shippingValuePaid}
+                    {discountedSubtotal >= 30000 ? c.shippingValueFree : c.shippingValuePaid}
                   </span>
+                </div>
+                <div className="flex items-center justify-between text-base font-medium border-t border-line pt-3">
+                  <span>{locale === "en" ? "Total" : locale === "de" ? "Gesamt" : "Összesen"}</span>
+                  <span className="price">{formatMoney(grandTotal, locale)}</span>
                 </div>
                 <button
                   onClick={() => setStep("checkout")}
@@ -294,9 +417,19 @@ ${t.whatsapp.noteLabel}: ${form.note}`;
             </div>
 
             <div className="border-t border-line p-6 space-y-3">
+              {coupon && discount > 0 && (
+                <div className="flex items-center justify-between text-xs text-sale">
+                  <span>
+                    <span className="font-mono tracking-widest-2 uppercase">{coupon.code}</span>
+                    {" "}
+                    {locale === "en" ? "discount" : locale === "de" ? "Rabatt" : "kedvezmény"}
+                  </span>
+                  <span className="price">−{formatMoney(discount, locale)}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-sm">
                 <span>{t.cart.total}</span>
-                <span className="price">{formatMoney(subtotal + (subtotal >= 30000 ? 0 : 1690), locale)}</span>
+                <span className="price">{formatMoney(grandTotal, locale)}</span>
               </div>
 
               {STRIPE_ENABLED && (
