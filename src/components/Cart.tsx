@@ -220,11 +220,11 @@ export default function Cart() {
         }`}
       />
       <aside
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-[440px] bg-white shadow-xl transition-transform duration-300 flex flex-col ${
+        className={`fixed top-0 right-0 z-50 h-[100dvh] w-full max-w-[440px] bg-white shadow-xl transition-transform duration-300 flex flex-col ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-[64px] px-6 flex items-center justify-between border-b border-line">
+        <div className="h-[64px] shrink-0 px-6 flex items-center justify-between border-b border-line">
           <div className="font-display text-lg tracking-widest-2">
             {step === "bag" && t.cart.title}
             {step === "checkout" && t.cart.checkout}
@@ -320,7 +320,7 @@ export default function Cart() {
             </div>
 
             {items.length > 0 && (
-              <div className="border-t border-line p-6 space-y-3">
+              <div className="shrink-0 border-t border-line p-6 space-y-3">
                 {subtotal < FREE_SHIPPING_THRESHOLD_HUF ? (
                   <div className="bg-bone p-3 space-y-2">
                     <div className="text-xs text-ink">
@@ -582,7 +582,7 @@ export default function Cart() {
               )}
             </div>
 
-            <div className="border-t border-line p-6 space-y-3">
+            <div className="shrink-0 border-t border-line p-5 space-y-2.5">
               {coupon && discount > 0 && (
                 <div className="flex items-center justify-between text-xs text-sale">
                   <span>
@@ -611,7 +611,7 @@ export default function Cart() {
                     type="button"
                     onClick={() => accepted && payWithCard()}
                     disabled={!accepted || busy !== null}
-                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-3.5 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
                   >
                     <CreditCard size={14} strokeWidth={1.6} />
                     {busy === "card" ? "..." : c.cardPayment}
@@ -740,7 +740,7 @@ function ShippingOption({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`w-full flex items-center gap-3 p-3 border text-left transition-colors ${
+      className={`w-full flex items-center gap-2.5 px-3 py-2.5 border text-left transition-colors ${
         disabled
           ? "border-line opacity-40 cursor-not-allowed"
           : selected
@@ -750,10 +750,10 @@ function ShippingOption({
     >
       <div className="shrink-0 text-ink/70">{icon}</div>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm">{title}</div>
-        <div className="text-xs text-muted">{subtitle}</div>
+        <div className="font-medium text-[13px] leading-tight">{title}</div>
+        <div className="text-[11px] text-muted leading-tight mt-0.5 truncate">{subtitle}</div>
       </div>
-      <div className="price text-sm shrink-0">{fee}</div>
+      <div className="price text-xs shrink-0">{fee}</div>
     </button>
   );
 }
