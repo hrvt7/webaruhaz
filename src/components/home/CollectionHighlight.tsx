@@ -14,6 +14,7 @@ export default function CollectionHighlight({
   const overline = localize(data.overline, locale) || t.home.collection;
   const title = localize(data.title, locale);
   const subtitle = localize(data.subtitle, locale);
+  const textStyle = data.style?.text_color ? { color: data.style.text_color } : undefined;
   return (
     <section className="relative h-[80vh] min-h-[520px] overflow-hidden">
       {/\.(mp4|webm|mov|m4v)(\?|$)/i.test(data.image || "") ? (
@@ -31,7 +32,7 @@ export default function CollectionHighlight({
         <img src={data.image} alt={title} className="absolute inset-0 h-full w-full object-cover" />
       )}
       <div className="absolute inset-0 bg-ink/30" />
-      <div className="relative z-10 h-full grid place-items-center text-center text-white px-6">
+      <div className="relative z-10 h-full grid place-items-center text-center text-white px-6" style={textStyle}>
         <div className="max-w-xl">
           <div className="text-[11px] tracking-widest-3 uppercase mb-5 opacity-90">
             {overline}

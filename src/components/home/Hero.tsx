@@ -18,6 +18,7 @@ export default function Hero({
   const subtitle = localize(data.subtitle, locale);
   const ctaWomen = localize(data.cta_women, locale) || dict.shopWomen;
   const ctaMen = localize(data.cta_men, locale) || dict.shopMen;
+  const textStyle = data.style?.text_color ? { color: data.style.text_color } : undefined;
   return (
     <section className="relative h-screen min-h-[640px] -mt-[96px] bg-ink overflow-hidden">
       {/\.(mp4|webm|mov|m4v)(\?|$)/i.test(data.image || "/hero-video.mp4") ? (
@@ -42,7 +43,7 @@ export default function Hero({
       <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/10" />
 
       <div className="relative z-10 mx-auto max-w-[1440px] h-full px-6 md:px-10 flex items-end md:items-center pb-16 md:pb-0">
-        <div className="max-w-2xl text-white text-center md:text-left mx-auto md:mx-0">
+        <div className="max-w-2xl text-white text-center md:text-left mx-auto md:mx-0" style={textStyle}>
           {overline && (
             <div className="text-[11px] tracking-widest-3 uppercase mb-6 opacity-90">
               {overline}

@@ -36,9 +36,10 @@ export default function Newsletter({
   const overline = localize(data?.overline, locale) || fb.overline;
   const title = localize(data?.title, locale) || fb.title;
   const body = localize(data?.body, locale) || fb.body;
+  const textStyle = data?.style?.text_color ? { color: data.style.text_color } : undefined;
 
   return (
-    <section className="bg-ink text-white py-24">
+    <section className="bg-ink text-white py-24" style={textStyle}>
       <div className="mx-auto max-w-2xl px-6 text-center">
         <div className="text-[11px] tracking-widest-3 uppercase opacity-70 mb-5">
           {overline}

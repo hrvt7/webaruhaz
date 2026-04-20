@@ -29,6 +29,7 @@ export default function Partnership({
   const image = data?.image?.trim() || FALLBACK.image;
   const link = data?.link?.trim() || FALLBACK.link;
   const cta = localize(data?.cta, locale) || FALLBACK.cta;
+  const textStyle = data?.style?.text_color ? { color: data.style.text_color } : undefined;
 
   const isVideo = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(image);
 
@@ -51,7 +52,7 @@ export default function Partnership({
         )}
       </div>
 
-      <div className="text-center md:text-left order-1 md:order-2">
+      <div className="text-center md:text-left order-1 md:order-2" style={textStyle}>
         <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-5">
           {overline}
         </div>

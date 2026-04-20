@@ -8,6 +8,8 @@ import type { LocalizedText } from "@/lib/localize";
 import { toI18nObject } from "@/lib/localize";
 import { saveLanding } from "./actions";
 import { I18nText, I18nTextarea } from "@/components/admin/I18nInput";
+import ColorPicker from "@/components/admin/ColorPicker";
+import type { SectionStyle } from "@/lib/store";
 
 type I18n = { hu: string; en: string; de: string };
 
@@ -135,6 +137,7 @@ export default function LandingForm({
           <I18nText label="CTA 1 (Women)" value={state.hero.cta_women} onChange={(v) => updHero({ cta_women: v })} />
           <I18nText label="CTA 2 (Men)" value={state.hero.cta_men} onChange={(v) => updHero({ cta_men: v })} />
         </div>
+        <StyleBlock value={state.hero.style} onChange={(s) => updHero({ style: s })} />
       </Section>
 
       <Section title="Brand story">
@@ -149,6 +152,7 @@ export default function LandingForm({
           onFile={(f) => upload(f, (u) => updBrand({ image: u }), "landing/brand")}
           dropLabel={labels.dropImage}
         />
+        <StyleBlock value={state.brand_story.style} onChange={(s) => updBrand({ style: s })} />
       </Section>
 
       <Section title="Collection highlight">
@@ -165,6 +169,7 @@ export default function LandingForm({
           onFile={(f) => upload(f, (u) => updColl({ image: u }), "landing/collection")}
           dropLabel={labels.dropImage}
         />
+        <StyleBlock value={state.collection_highlight.style} onChange={(s) => updColl({ style: s })} />
       </Section>
 
       <Section title="Kategória kártyák (Női / Férfi / Szettek)">
@@ -183,6 +188,7 @@ export default function LandingForm({
         <ImagePicker label="Kép / videó" v={state.partnership?.image || ""} on={(url) => updPartner({ image: url })} onFile={(f) => upload(f, (u) => updPartner({ image: u }), "landing/partnership")} dropLabel={labels.dropImage} />
         <Text label="Link URL" v={state.partnership?.link || ""} on={(v) => updPartner({ link: v })} />
         <I18nText label="Gomb szöveg (CTA)" value={state.partnership?.cta ?? ""} onChange={(v) => updPartner({ cta: v })} />
+        <StyleBlock value={state.partnership?.style} onChange={(s) => updPartner({ style: s })} />
       </Section>
 
       <Section title="Lookbook (3 kép)">
@@ -203,12 +209,14 @@ export default function LandingForm({
           <ImagePicker label="Második" v={state.editorial?.image2 || ""} on={(url) => updEditorial({ image2: url })} onFile={(f) => upload(f, (u) => updEditorial({ image2: u }), "landing/editorial")} dropLabel={labels.dropImage} />
           <ImagePicker label="Harmadik" v={state.editorial?.image3 || ""} on={(url) => updEditorial({ image3: url })} onFile={(f) => upload(f, (u) => updEditorial({ image3: u }), "landing/editorial")} dropLabel={labels.dropImage} />
         </div>
+        <StyleBlock value={state.editorial?.style} onChange={(s) => updEditorial({ style: s })} />
       </Section>
 
       <Section title="Hírlevél blokk">
         <I18nText label="Overline" value={state.newsletter?.overline ?? ""} onChange={(v) => updNews({ overline: v })} />
         <I18nText label="Cím" value={state.newsletter?.title ?? ""} onChange={(v) => updNews({ title: v })} />
         <I18nTextarea label="Leírás" rows={3} value={state.newsletter?.body ?? ""} onChange={(v) => updNews({ body: v })} />
+        <StyleBlock value={state.newsletter?.style} onChange={(s) => updNews({ style: s })} />
       </Section>
 
       <Section title="Futó szalag (marquee)">
@@ -231,6 +239,7 @@ export default function LandingForm({
           value={state.footer?.tagline ?? ""}
           onChange={(v) => updFooter({ tagline: v })}
         />
+        <StyleBlock value={state.footer?.style} onChange={(s) => updFooter({ style: s })} />
       </Section>
 
       {error && (
@@ -309,6 +318,36 @@ function MarqueeEditor({
         className="w-full border border-line focus:border-ink p-3 outline-none bg-transparent text-sm"
       />
     </div>
+  );
+}
+
+function StyleBlock({
+  label,
+  value,
+  onChange,
+}: {
+  label?: string;
+  value: SectionStyle | undefined;
+  onChange: (s: SectionStyle | undefined) => void;
+}) {
+  const textColor = value?.text_color;
+  return (
+    <details className="border border-line bg-bone/30 p-4">
+      <summary className="cursor-pointer text-[10px] tracking-widest-2 uppercase text-muted hover:text-ink">
+        {label ?? "Stílus felülbírálás (színek)"}
+      </summary>
+      <div className="mt-4 space-y-3">
+        <ColorPicker
+          label="Szöveg szín (ha a háttérkép sötét/világos, válassz olvasható kontrasztot)"
+          value={textColor}
+          onChange={(v) => {
+            const next: SectionStyle = { ...(value || {}), text_color: v };
+            if (!next.text_color && !next.overline_color) onChange(undefined);
+            else onChange(next);
+          }}
+        />
+      </div>
+    </details>
   );
 }
 

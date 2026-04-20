@@ -2,16 +2,19 @@ import Link from "next/link";
 import ProductForm from "../ProductForm";
 import { getT } from "@/i18n/server";
 import { supabaseServer } from "@/lib/supabase/server";
+import { getCategories } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 export const revalidate = 0;
 
 export default async function NewProductPage() {
-  const { t } = await getT();
+  const { t, locale } = await getT();
   const sb = await supabaseServer();
-  const { data: collections } = await sb
-    .from("collections")
-    .select("slug, title")
-    .order("created_at");
+  const [{ data: collections }, cats] = await Promise.all([
+    sb.from("collections").select("slug, title").order("created_at"),
+    getCategories(false),
+  ]);
+  const categories = cats.map((c) => ({ slug: c.slug, label: localize(c.title, locale) || c.slug }));
 
   return (
     <div>
@@ -28,6 +31,7 @@ export default async function NewProductPage() {
       <ProductForm
         mode="new"
         collections={collections ?? []}
+        categories={categories}
         labels={{
           save: t.admin.save,
           delete: t.admin.delete,
@@ -43,7 +47,7 @@ export default async function NewProductPage() {
           slug: "",
           sku: "",
           name: "",
-          category: "women-tops",
+          category: categories[0]?.slug ?? "women",
           gender: "women",
           price: 0,
           compare_at: null,

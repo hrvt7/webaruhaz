@@ -4,9 +4,10 @@ import Link from "next/link";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useT } from "@/i18n/provider";
 
-export default function Footer({ taglineOverride }: { taglineOverride?: string }) {
+export default function Footer({ taglineOverride, textColor }: { taglineOverride?: string; textColor?: string }) {
   const { t, c } = useT();
   const tagline = (taglineOverride && taglineOverride.trim()) || t.footer.tagline;
+  const taglineStyle = textColor ? { color: textColor } : undefined;
   const cols = [
     {
       title: t.footer.shop,
@@ -45,7 +46,7 @@ export default function Footer({ taglineOverride }: { taglineOverride?: string }
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 py-16 grid gap-12 lg:grid-cols-[1.3fr_repeat(3,1fr)_1.3fr]">
         <div>
           <div className="font-display text-2xl tracking-[0.25em]">AETHERIS</div>
-          <p className="mt-4 text-sm text-muted max-w-xs leading-relaxed">
+          <p className="mt-4 text-sm text-muted max-w-xs leading-relaxed" style={taglineStyle}>
             {tagline}
           </p>
           <div className="mt-6">

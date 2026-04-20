@@ -7,23 +7,24 @@ import CollectionHighlight from "@/components/home/CollectionHighlight";
 import EditorialGrid from "@/components/home/EditorialGrid";
 import Partnership from "@/components/home/Partnership";
 import Newsletter from "@/components/home/Newsletter";
-import { getLanding, getAllProducts } from "@/lib/store";
+import { getLanding, getAllProducts, getCategories } from "@/lib/store";
 import { getT } from "@/i18n/server";
 
 export const revalidate = 30;
 
 export default async function Home() {
-  const [{ t, locale }, landing, allProducts] = await Promise.all([
+  const [{ t, locale }, landing, allProducts, categories] = await Promise.all([
     getT(),
     getLanding(),
     getAllProducts(),
+    getCategories(true),
   ]);
   const newArrivals = allProducts.slice(0, 8);
   return (
     <>
       <Hero data={landing.hero} locale={locale} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
       <Marquee items={landing.marquee?.items} />
-      <CategoryGrid data={landing.categories} />
+      <CategoryGrid data={landing.categories} categories={categories} />
       <NewArrivals items={newArrivals} />
       <BrandStory data={landing.brand_story} />
       <CollectionHighlight data={landing.collection_highlight} />

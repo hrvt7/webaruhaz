@@ -74,6 +74,7 @@ export default async function RootLayout({
   const { locale } = await getT();
   const landing = await getLanding().catch(() => null);
   const footerTagline = localize(landing?.footer?.tagline, locale);
+  const footerTextColor = landing?.footer?.style?.text_color;
   return (
     <html
       lang={locale}
@@ -131,7 +132,7 @@ export default async function RootLayout({
         <Analytics />
         <I18nProvider locale={locale}>
           <CartProvider>
-            <SiteChrome footerTagline={footerTagline}>{children}</SiteChrome>
+            <SiteChrome footerTagline={footerTagline} footerTextColor={footerTextColor}>{children}</SiteChrome>
           </CartProvider>
         </I18nProvider>
         <CookieConsent />

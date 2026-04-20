@@ -10,9 +10,11 @@ import { useT } from "@/i18n/provider";
 export default function SiteChrome({
   children,
   footerTagline,
+  footerTextColor,
 }: {
   children: React.ReactNode;
   footerTagline?: string;
+  footerTextColor?: string;
 }) {
   const pathname = usePathname();
   const { locale } = useT();
@@ -24,7 +26,7 @@ export default function SiteChrome({
     <>
       <Header />
       <main className="flex-1 pt-[96px]">{children}</main>
-      <Footer taglineOverride={footerTagline} />
+      <Footer taglineOverride={footerTagline} textColor={footerTextColor} />
       <Cart />
       <CookieBanner locale={locale} />
     </>

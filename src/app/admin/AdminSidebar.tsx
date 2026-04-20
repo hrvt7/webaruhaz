@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, Layers, Home, Inbox, Mail } from "lucide-react";
+import { LayoutDashboard, Package, Layers, Home, Inbox, Mail, Tags } from "lucide-react";
 
 export default function AdminSidebar({
   labels,
@@ -19,6 +19,7 @@ export default function AdminSidebar({
   const items = [
     { href: "/admin", label: labels.dashboard, icon: LayoutDashboard, exact: true },
     { href: "/admin/products", label: labels.products, icon: Package },
+    { href: "/admin/categories", label: "Kategóriák", icon: Tags },
     { href: "/admin/collections", label: labels.collections, icon: Layers },
     { href: "/admin/landing", label: labels.landing, icon: Home },
     { href: "/admin/orders", label: labels.orders, icon: Inbox },

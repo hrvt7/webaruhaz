@@ -26,11 +26,12 @@ export default function EditorialGrid({
   const overline = data?.overline === undefined ? t.home.editorial : localize(data.overline, locale);
   const title = data?.title === undefined ? t.home.lookbook : localize(data.title, locale);
   const showHeader = Boolean((overline && overline.trim()) || (title && title.trim()));
+  const textStyle = data?.style?.text_color ? { color: data.style.text_color } : undefined;
 
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-28">
       {showHeader && (
-        <div className="flex items-end justify-between mb-10">
+        <div className="flex items-end justify-between mb-10" style={textStyle}>
           <div className="text-center md:text-left w-full md:w-auto">
             {overline && overline.trim() && (
               <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">

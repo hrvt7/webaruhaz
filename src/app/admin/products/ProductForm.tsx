@@ -41,23 +41,15 @@ type Props = {
   mode: "new" | "edit";
   initial: ProductInput & { id?: string | null };
   collections: { slug: string; title: string }[];
+  categories: { slug: string; label: string }[];
   labels: Labels;
 };
 
-const CATEGORIES = [
-  "women-tops",
-  "women-bottoms",
-  "women-dresses",
-  "men-tops",
-  "men-bottoms",
-  "accessories",
-  "sale",
-];
 const GENDERS = ["women", "men", "unisex"] as const;
 
 type LocaleKey = "hu" | "en" | "de";
 
-export default function ProductForm({ mode, initial, collections, labels }: Props) {
+export default function ProductForm({ mode, initial, collections, categories, labels }: Props) {
   const [state, setState] = useState<ProductInput>({ ...initial, i18n: initial.i18n ?? {} });
   const [colorsText, setColorsText] = useState(initial.colors.join(", "));
   const [sizesText, setSizesText] = useState(initial.sizes.join(", "));
@@ -164,7 +156,11 @@ export default function ProductForm({ mode, initial, collections, labels }: Prop
             label={labels.fields.category}
             value={state.category}
             onChange={(v) => setState({ ...state, category: v })}
-            options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+            options={
+              categories.length > 0
+                ? categories.map((c) => ({ value: c.slug, label: c.label }))
+                : [{ value: state.category, label: state.category }]
+            }
           />
           <Select
             label={labels.fields.gender}

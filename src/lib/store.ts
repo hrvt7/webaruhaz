@@ -38,6 +38,23 @@ export type Collection = {
   active: boolean;
 };
 
+export type Category = {
+  id: string;
+  slug: string;
+  title: LocalizedText;      // {hu,en,de}
+  subtitle: LocalizedText;
+  image: string | null;      // nagy fejléc kép a shop oldalhoz
+  card_image: string | null; // főoldali kártya kép
+  sort_order: number;
+  active: boolean;
+};
+
+// Opcionális stílus felülbírálás egy-egy szekciónak (pl. sötét háttérképen fehér szöveg).
+export type SectionStyle = {
+  text_color?: string;   // pl. "#ffffff" vagy "#0a0a0a"
+  overline_color?: string;
+};
+
 export type LandingContent = {
   hero: {
     overline: LocalizedText;
@@ -47,6 +64,7 @@ export type LandingContent = {
     image: string;
     cta_women: LocalizedText;
     cta_men: LocalizedText;
+    style?: SectionStyle;
   };
   brand_story: {
     overline: LocalizedText;
@@ -54,6 +72,7 @@ export type LandingContent = {
     body_1: LocalizedText;
     body_2: LocalizedText;
     image: string;
+    style?: SectionStyle;
   };
   collection_highlight: {
     overline: LocalizedText;
@@ -61,9 +80,11 @@ export type LandingContent = {
     subtitle: LocalizedText;
     image: string;
     slug: string;
+    style?: SectionStyle;
   };
   marquee?: {
     items: LocalizedText[]; // minden item önálló lokalizált szöveg is lehet
+    style?: SectionStyle;
   };
   editorial?: {
     overline?: LocalizedText;
@@ -71,11 +92,13 @@ export type LandingContent = {
     image1: string;
     image2: string;
     image3: string;
+    style?: SectionStyle;
   };
   newsletter?: {
     overline: LocalizedText;
     title: LocalizedText;
     body: LocalizedText;
+    style?: SectionStyle;
   };
   categories?: {
     women_image: string;
@@ -90,9 +113,11 @@ export type LandingContent = {
     image: string;
     link: string;
     cta: LocalizedText;
+    style?: SectionStyle;
   };
   footer?: {
     tagline: LocalizedText;
+    style?: SectionStyle;
   };
 };
 
@@ -195,6 +220,25 @@ export async function getAllCollections(): Promise<Collection[]> {
   const sb = await supabaseServer();
   const { data } = await sb.from("collections").select("*").order("created_at");
   return (data as Collection[]) || [];
+}
+
+// ============== CATEGORIES ==============
+export async function getCategories(onlyActive = true): Promise<Category[]> {
+  const sb = await supabaseServer();
+  let q = sb.from("categories").select("*").order("sort_order");
+  if (onlyActive) q = q.eq("active", true);
+  const { data } = await q;
+  return (data as Category[]) || [];
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  const sb = await supabaseServer();
+  const { data } = await sb
+    .from("categories")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  return (data as Category) || null;
 }
 
 export async function getLanding(): Promise<LandingContent> {

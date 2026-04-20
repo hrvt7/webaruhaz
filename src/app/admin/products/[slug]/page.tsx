@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import ProductForm from "../ProductForm";
 import { getT } from "@/i18n/server";
 import { supabaseServer } from "@/lib/supabase/server";
+import { getCategories } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 export const revalidate = 0;
 
@@ -12,12 +14,14 @@ export default async function EditProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { t } = await getT();
+  const { t, locale } = await getT();
   const sb = await supabaseServer();
-  const [{ data: p }, { data: collections }] = await Promise.all([
+  const [{ data: p }, { data: collections }, cats] = await Promise.all([
     sb.from("products").select("*").eq("slug", slug).maybeSingle(),
     sb.from("collections").select("slug, title").order("created_at"),
+    getCategories(false),
   ]);
+  const categories = cats.map((c) => ({ slug: c.slug, label: localize(c.title, locale) || c.slug }));
 
   if (!p) notFound();
 
@@ -37,6 +41,7 @@ export default async function EditProductPage({
       <ProductForm
         mode="edit"
         collections={collections ?? []}
+        categories={categories}
         labels={{
           save: t.admin.save,
           delete: t.admin.delete,

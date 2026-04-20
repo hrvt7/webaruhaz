@@ -2,31 +2,36 @@
 
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
-import { LandingContent } from "@/lib/store";
+import { Category, LandingContent } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 export default function CategoryGrid({
   data,
+  categories,
 }: {
   data?: LandingContent["categories"];
+  categories: Category[];
 }) {
-  const { t } = useT();
-  const cards = [
-    {
-      title: t.nav.women,
-      href: "/shop/women",
-      img: data?.women_image || "/cat-women.jpg",
-    },
-    {
-      title: t.nav.men,
-      href: "/shop/men",
-      img: data?.men_image || "/cat-men.jpg",
-    },
-    {
-      title: "Szettek",
-      href: "/shop/women",
-      img: data?.sets_image || "/cat-sets.jpg",
-    },
-  ];
+  const { t, locale } = useT();
+
+  // Kártyák forrása: a DB-ben lévő aktív kategóriák (kihagyva a "sale" alapértelmezetten)
+  const cards = categories
+    .filter((c) => c.slug !== "sale")
+    .slice(0, 4) // max 4 kártya az esztétikáért
+    .map((c) => ({
+      title: localize(c.title, locale) || c.slug,
+      href: `/shop/${c.slug}`,
+      // Prioritás: kategória saját kép → landing-ban beállított legacy kép (ha van) → placeholder
+      img:
+        c.card_image ||
+        (c.slug === "women" ? data?.women_image : null) ||
+        (c.slug === "men" ? data?.men_image : null) ||
+        (c.slug === "accessories" ? data?.sets_image : null) ||
+        `/cat-${c.slug}.jpg`,
+    }));
+
+  if (cards.length === 0) return null;
+
   return (
     <section className="py-20 md:py-28">
       <div className="mx-auto max-w-[1440px] px-6 md:px-10 mb-10 md:mb-14">
@@ -46,8 +51,12 @@ export default function CategoryGrid({
         </div>
       </div>
 
-      <div className="hidden md:block mx-auto max-w-[1440px] px-6 md:px-10">
-        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+      <div className={`hidden md:block mx-auto max-w-[1440px] px-6 md:px-10`}>
+        <div
+          className={`grid gap-4 md:gap-6 ${
+            cards.length === 2 ? "md:grid-cols-2" : cards.length === 4 ? "md:grid-cols-4" : "md:grid-cols-3"
+          }`}
+        >
           {cards.map((c) => (
             <Link key={c.title} href={c.href} className="group">
               <div className="hover-zoom aspect-[3/4] bg-bone overflow-hidden">
