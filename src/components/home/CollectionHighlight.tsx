@@ -12,8 +12,20 @@ export default function CollectionHighlight({
   const { t } = useT();
   return (
     <section className="relative h-[80vh] min-h-[520px] overflow-hidden">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={data.image} alt={data.title} className="absolute inset-0 h-full w-full object-cover" />
+      {/\.(mp4|webm|mov|m4v)(\?|$)/i.test(data.image || "") ? (
+        <video
+          src={data.image}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={data.image} alt={data.title} className="absolute inset-0 h-full w-full object-cover" />
+      )}
       <div className="absolute inset-0 bg-ink/30" />
       <div className="relative z-10 h-full grid place-items-center text-center text-white px-6">
         <div className="max-w-xl">

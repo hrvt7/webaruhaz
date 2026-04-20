@@ -9,15 +9,24 @@ export default function BrandStory({ data }: { data: LandingContent["brand_story
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-32 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div className="aspect-[4/5] bg-ink overflow-hidden">
-        <video
-          src="/brand-story.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="h-full w-full object-cover"
-        />
+        {/\.(mp4|webm|mov|m4v)(\?|$)/i.test(data.image || "") ? (
+          <video
+            src={data.image || "/brand-story.mp4"}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={data.image || "/brand-story.mp4"}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
       <div className="text-center md:text-left">
         <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-5">
