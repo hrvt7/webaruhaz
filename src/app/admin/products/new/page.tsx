@@ -53,6 +53,7 @@ export default async function NewProductPage() {
           long_desc: "",
           materials: "",
           care: "",
+          size_guide: "",
           badge: null,
           images: [],
           collection: null,

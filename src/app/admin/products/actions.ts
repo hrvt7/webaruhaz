@@ -18,6 +18,7 @@ export type ProductInput = {
   long_desc: string;
   materials: string;
   care: string;
+  size_guide: string;
   badge: string | null;
   images: string[];
   collection: string | null;

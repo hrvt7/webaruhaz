@@ -29,6 +29,7 @@ type Labels = {
     longDesc: string;
     materials: string;
     care: string;
+    size_guide?: string;
     badge: string;
     collection: string;
     active: string;
@@ -169,6 +170,12 @@ export default function ProductForm({ mode, initial, collections, labels }: Prop
         <Textarea label={labels.fields.longDesc} value={state.long_desc} onChange={(v) => setState({ ...state, long_desc: v })} rows={5} />
         <Input label={labels.fields.materials} value={state.materials} onChange={(v) => setState({ ...state, materials: v })} />
         <Input label={labels.fields.care} value={state.care} onChange={(v) => setState({ ...state, care: v })} />
+        <Textarea
+          label={labels.fields.size_guide ?? "Méret táblázat"}
+          value={state.size_guide ?? ""}
+          onChange={(v) => setState({ ...state, size_guide: v })}
+          rows={6}
+        />
 
         <div className="grid md:grid-cols-2 gap-4">
           <Select

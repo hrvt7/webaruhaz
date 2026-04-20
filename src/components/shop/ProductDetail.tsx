@@ -239,7 +239,13 @@ export default function ProductDetail({
                 Close
               </button>
             </div>
-            <SizeTable />
+            {p.size_guide && p.size_guide.trim() ? (
+              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
+                {p.size_guide}
+              </pre>
+            ) : (
+              <SizeTable />
+            )}
             <div className="mt-6">
               <Link
                 href="/size-guide"

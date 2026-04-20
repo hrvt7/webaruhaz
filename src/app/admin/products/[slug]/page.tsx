@@ -63,6 +63,7 @@ export default async function EditProductPage({
           long_desc: p.long_desc ?? "",
           materials: p.materials ?? "",
           care: p.care ?? "",
+          size_guide: p.size_guide ?? "",
           badge: p.badge,
           images: p.images ?? [],
           collection: p.collection,

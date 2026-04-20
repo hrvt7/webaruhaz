@@ -60,7 +60,7 @@ type DictShape = {
     fields: {
       name: string; slug: string; sku: string; category: string; gender: string; price: string;
       compareAt: string; colors: string; sizes: string; shortDesc: string; longDesc: string;
-      materials: string; care: string; badge: string; images: string; collection: string;
+      materials: string; care: string; size_guide: string; badge: string; images: string; collection: string;
       active: string; sortOrder: string; title: string; subtitle: string; intro: string; heroImage: string;
     };
     uploadImage: string; dropImage: string; removeImage: string;
@@ -262,6 +262,7 @@ export const dict: { hu: DictShape } = {
         longDesc: "Részletes leírás",
         materials: "Anyagok",
         care: "Ápolás",
+        size_guide: "Méret táblázat (termékspecifikus)",
         badge: "Címke (Bestseller / New arrival / ...)",
         images: "Képek",
         collection: "Kollekció",
@@ -487,6 +488,7 @@ const en: DictTree = {
       longDesc: "Long description",
       materials: "Materials",
       care: "Care",
+      size_guide: "Size guide (product-specific)",
       badge: "Badge (Bestseller / New arrival / ...)",
       images: "Images",
       collection: "Collection",
@@ -709,6 +711,7 @@ const de: DictTree = {
       longDesc: "Lange Beschreibung",
       materials: "Materialien",
       care: "Pflege",
+      size_guide: "Größentabelle (produktspezifisch)",
       badge: "Badge (Bestseller / New arrival / ...)",
       images: "Bilder",
       collection: "Kollektion",
