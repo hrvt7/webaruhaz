@@ -111,6 +111,25 @@ export default function LandingForm({
         ...patch,
       },
     }));
+  const updAbout = (patch: Partial<NonNullable<LandingContent["about"]>>) =>
+    setState((s) => ({
+      ...s,
+      about: {
+        overline: s.about?.overline ?? "",
+        title: s.about?.title ?? "",
+        body_1: s.about?.body_1 ?? "",
+        body_2: s.about?.body_2 ?? "",
+        body_3: s.about?.body_3 ?? "",
+        image: s.about?.image ?? "",
+        stat_1_value: s.about?.stat_1_value ?? "",
+        stat_1_label: s.about?.stat_1_label ?? "",
+        stat_2_value: s.about?.stat_2_value ?? "",
+        stat_2_label: s.about?.stat_2_label ?? "",
+        stat_3_value: s.about?.stat_3_value ?? "",
+        stat_3_label: s.about?.stat_3_label ?? "",
+        ...patch,
+      },
+    }));
   const updFooter = (patch: Partial<NonNullable<LandingContent["footer"]>>) =>
     setState((s) => ({
       ...s,
@@ -227,6 +246,36 @@ export default function LandingForm({
           items={state.marquee?.items ?? []}
           onChange={(items) => setState({ ...state, marquee: { items } })}
         />
+      </Section>
+
+      <Section title="A történetünk oldal (/about)">
+        <div className="text-xs text-muted mb-3">
+          Ez az <code className="font-mono">/about</code> aloldal. Ha az összes mező üres, visszaesik az alap márka-leírásra.
+        </div>
+        <I18nText label="Overline (kis fejléc)" value={state.about?.overline ?? ""} onChange={(v) => updAbout({ overline: v })} />
+        <I18nTextarea label="Cím (\\n sortörés támogatott)" rows={2} value={state.about?.title ?? ""} onChange={(v) => updAbout({ title: v })} />
+        <ImagePicker
+          label="Fejléc kép / videó"
+          v={state.about?.image || ""}
+          on={(url) => updAbout({ image: url })}
+          onFile={(f) => upload(f, (u) => updAbout({ image: u }), "landing/about")}
+          dropLabel={labels.dropImage}
+        />
+        <I18nTextarea label="Első bekezdés" rows={4} value={state.about?.body_1 ?? ""} onChange={(v) => updAbout({ body_1: v })} />
+        <I18nTextarea label="Második bekezdés" rows={3} value={state.about?.body_2 ?? ""} onChange={(v) => updAbout({ body_2: v })} />
+        <I18nTextarea label="Harmadik bekezdés" rows={3} value={state.about?.body_3 ?? ""} onChange={(v) => updAbout({ body_3: v })} />
+        <div className="border-t border-line pt-4 mt-2">
+          <div className="text-[11px] tracking-widest-2 uppercase text-muted mb-3">3 darab statisztika (szám + címke)</div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <I18nText label="1. Szám" value={state.about?.stat_1_value ?? ""} onChange={(v) => updAbout({ stat_1_value: v })} />
+            <I18nText label="1. Címke" value={state.about?.stat_1_label ?? ""} onChange={(v) => updAbout({ stat_1_label: v })} />
+            <I18nText label="2. Szám" value={state.about?.stat_2_value ?? ""} onChange={(v) => updAbout({ stat_2_value: v })} />
+            <I18nText label="2. Címke" value={state.about?.stat_2_label ?? ""} onChange={(v) => updAbout({ stat_2_label: v })} />
+            <I18nText label="3. Szám" value={state.about?.stat_3_value ?? ""} onChange={(v) => updAbout({ stat_3_value: v })} />
+            <I18nText label="3. Címke" value={state.about?.stat_3_label ?? ""} onChange={(v) => updAbout({ stat_3_label: v })} />
+          </div>
+        </div>
+        <StyleBlock value={state.about?.style} onChange={(s) => updAbout({ style: s })} />
       </Section>
 
       <Section title="Footer / lábléc szöveg">

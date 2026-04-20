@@ -119,6 +119,21 @@ export type LandingContent = {
     tagline: LocalizedText;
     style?: SectionStyle;
   };
+  about?: {
+    overline: LocalizedText;
+    title: LocalizedText;
+    body_1: LocalizedText;
+    body_2: LocalizedText;
+    body_3: LocalizedText;
+    image: string;
+    stat_1_value: LocalizedText;
+    stat_1_label: LocalizedText;
+    stat_2_value: LocalizedText;
+    stat_2_label: LocalizedText;
+    stat_3_value: LocalizedText;
+    stat_3_label: LocalizedText;
+    style?: SectionStyle;
+  };
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {
