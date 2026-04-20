@@ -3,6 +3,8 @@ import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import SiteChrome from "@/components/SiteChrome";
+import CookieConsent from "@/components/CookieConsent";
+import Analytics from "@/components/Analytics";
 import { I18nProvider } from "@/i18n/provider";
 import { getT } from "@/i18n/server";
 
@@ -26,19 +28,41 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://webaruhaz-gamma.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://webaruhaz-gamma.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Aetheris — Modern wardrobe essentials",
     template: "%s · Aetheris",
   },
   description:
     "Aetheris — minimalista prémium divat. Válogatott, tartós alapdarabok nőknek és férfiaknak. Budapest.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Aetheris — Modern wardrobe essentials",
     description: "Minimalista prémium divat. Budapest.",
     type: "website",
     locale: "hu_HU",
+    url: SITE_URL,
+    siteName: "Aetheris",
+    images: [
+      {
+        url: "/aetheris-hero.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Aetheris — Modern wardrobe essentials",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aetheris — Modern wardrobe essentials",
+    description: "Minimalista prémium divat. Budapest.",
+    images: ["/aetheris-hero.jpg"],
   },
 };
 
@@ -57,29 +81,56 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Aetheris",
-              email: "info@aetheris.hu",
-              telephone: "+36 30 525 2336",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Budapest",
-                addressCountry: "HU",
-              },
-              sameAs: [
-                "https://instagram.com/aetheris.hu",
-                "https://facebook.com/profile.php?id=61580621469300",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${SITE_URL}/#organization`,
+                  name: "Aetheris",
+                  url: SITE_URL,
+                  logo: `${SITE_URL}/aetheris-logo.jpg`,
+                  email: "info@aetheris.hu",
+                  telephone: "+36 30 525 2336",
+                  address: {
+                    "@type": "PostalAddress",
+                    addressLocality: "Budapest",
+                    addressCountry: "HU",
+                  },
+                  sameAs: [
+                    "https://instagram.com/aetheris.hu",
+                    "https://facebook.com/profile.php?id=61580621469300",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${SITE_URL}/#website`,
+                  url: SITE_URL,
+                  name: "Aetheris",
+                  description:
+                    "Minimalista prémium divat. Modern wardrobe essentials.",
+                  publisher: { "@id": `${SITE_URL}/#organization` },
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${SITE_URL}/shop?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                  inLanguage: ["hu", "en", "de"],
+                },
               ],
             }),
           }}
         />
       </head>
       <body className="min-h-full flex flex-col bg-white text-ink">
+        <Analytics />
         <I18nProvider locale={locale}>
           <CartProvider>
             <SiteChrome>{children}</SiteChrome>
           </CartProvider>
         </I18nProvider>
+        <CookieConsent />
       </body>
     </html>
   );
