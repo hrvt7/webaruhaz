@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import type { LocalizedText } from "@/lib/localize";
 
 export type Product = {
   id: string;
@@ -17,6 +18,10 @@ export type Product = {
   care: string;
   size_guide: string | null;
   badge: string | null;
+  i18n?: {
+    en?: { name?: string; short_desc?: string; long_desc?: string; materials?: string; care?: string; size_guide?: string };
+    de?: { name?: string; short_desc?: string; long_desc?: string; materials?: string; care?: string; size_guide?: string };
+  } | null;
   images: string[];
   collection: string | null;
   active: boolean;
@@ -35,42 +40,42 @@ export type Collection = {
 
 export type LandingContent = {
   hero: {
-    overline: string;
-    title_line_1: string;
-    title_line_2: string;
-    subtitle: string;
+    overline: LocalizedText;
+    title_line_1: LocalizedText;
+    title_line_2: LocalizedText;
+    subtitle: LocalizedText;
     image: string;
-    cta_women: string;
-    cta_men: string;
+    cta_women: LocalizedText;
+    cta_men: LocalizedText;
   };
   brand_story: {
-    overline: string;
-    title: string;
-    body_1: string;
-    body_2: string;
+    overline: LocalizedText;
+    title: LocalizedText;
+    body_1: LocalizedText;
+    body_2: LocalizedText;
     image: string;
   };
   collection_highlight: {
-    overline: string;
-    title: string;
-    subtitle: string;
+    overline: LocalizedText;
+    title: LocalizedText;
+    subtitle: LocalizedText;
     image: string;
     slug: string;
   };
   marquee?: {
-    items: string[];
+    items: LocalizedText[]; // minden item önálló lokalizált szöveg is lehet
   };
   editorial?: {
-    overline?: string;
-    title?: string;
+    overline?: LocalizedText;
+    title?: LocalizedText;
     image1: string;
     image2: string;
     image3: string;
   };
   newsletter?: {
-    overline: string;
-    title: string;
-    body: string;
+    overline: LocalizedText;
+    title: LocalizedText;
+    body: LocalizedText;
   };
   categories?: {
     women_image: string;
@@ -78,13 +83,16 @@ export type LandingContent = {
     sets_image: string;
   };
   partnership?: {
-    overline: string;
-    title: string;
-    body_1: string;
-    body_2: string;
+    overline: LocalizedText;
+    title: LocalizedText;
+    body_1: LocalizedText;
+    body_2: LocalizedText;
     image: string;
     link: string;
-    cta: string;
+    cta: LocalizedText;
+  };
+  footer?: {
+    tagline: LocalizedText;
   };
 };
 

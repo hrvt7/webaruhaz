@@ -2,6 +2,7 @@
 
 import { useT } from "@/i18n/provider";
 import { LandingContent } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 const CAPTIONS = {
   hu: ["Lendület", "Kitartás", "Fegyelem"],
@@ -22,8 +23,8 @@ export default function EditorialGrid({
     data?.image3 || "/landing-4.jpg",
   ];
 
-  const overline = data?.overline === undefined ? t.home.editorial : data.overline;
-  const title = data?.title === undefined ? t.home.lookbook : data.title;
+  const overline = data?.overline === undefined ? t.home.editorial : localize(data.overline, locale);
+  const title = data?.title === undefined ? t.home.lookbook : localize(data.title, locale);
   const showHeader = Boolean((overline && overline.trim()) || (title && title.trim()));
 
   return (

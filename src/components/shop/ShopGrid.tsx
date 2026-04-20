@@ -87,7 +87,7 @@ export default function ShopGrid({
   return (
     <section className="mx-auto max-w-[1440px] px-4 md:px-10 py-8 md:py-14">
       <header className="mb-8 md:mb-12">
-        <div className="text-[11px] tracking-widest-3 uppercase text-muted">Shop</div>
+        <div className="text-[11px] tracking-widest-3 uppercase text-muted">{t.product.shop}</div>
         <h1 className="font-display text-4xl md:text-6xl mt-2">{title}</h1>
         {subtitle && (
           <p className="mt-3 text-sm text-muted max-w-xl">{subtitle}</p>

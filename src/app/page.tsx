@@ -13,7 +13,7 @@ import { getT } from "@/i18n/server";
 export const revalidate = 30;
 
 export default async function Home() {
-  const [{ t }, landing, allProducts] = await Promise.all([
+  const [{ t, locale }, landing, allProducts] = await Promise.all([
     getT(),
     getLanding(),
     getAllProducts(),
@@ -21,7 +21,7 @@ export default async function Home() {
   const newArrivals = allProducts.slice(0, 8);
   return (
     <>
-      <Hero data={landing.hero} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
+      <Hero data={landing.hero} locale={locale} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
       <Marquee items={landing.marquee?.items} />
       <CategoryGrid data={landing.categories} />
       <NewArrivals items={newArrivals} />

@@ -4,6 +4,15 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabase/server";
 
+export type ProductI18nFields = {
+  name?: string;
+  short_desc?: string;
+  long_desc?: string;
+  materials?: string;
+  care?: string;
+  size_guide?: string;
+};
+
 export type ProductInput = {
   slug: string;
   sku: string;
@@ -24,6 +33,7 @@ export type ProductInput = {
   collection: string | null;
   active: boolean;
   sort_order: number;
+  i18n: { en?: ProductI18nFields; de?: ProductI18nFields };
 };
 
 async function requireAdmin() {

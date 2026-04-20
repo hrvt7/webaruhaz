@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useT } from "@/i18n/provider";
 import { LandingContent } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 const FALLBACK = {
   hu: {
@@ -32,9 +33,9 @@ export default function Newsletter({
   const [sent, setSent] = useState(false);
 
   const fb = FALLBACK[locale];
-  const overline = data?.overline?.trim() || fb.overline;
-  const title = data?.title?.trim() || fb.title;
-  const body = data?.body?.trim() || fb.body;
+  const overline = localize(data?.overline, locale) || fb.overline;
+  const title = localize(data?.title, locale) || fb.title;
+  const body = localize(data?.body, locale) || fb.body;
 
   return (
     <section className="bg-ink text-white py-24">

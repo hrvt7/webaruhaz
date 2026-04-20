@@ -1,7 +1,23 @@
 import Link from "next/link";
 import { LandingContent } from "@/lib/store";
+import { localize } from "@/lib/localize";
+import type { Locale } from "@/i18n/dict";
 
-export default function Hero({ data, dict }: { data: LandingContent["hero"]; dict: { shopWomen: string; shopMen: string } }) {
+export default function Hero({
+  data,
+  dict,
+  locale,
+}: {
+  data: LandingContent["hero"];
+  dict: { shopWomen: string; shopMen: string };
+  locale: Locale;
+}) {
+  const overline = localize(data.overline, locale);
+  const title1 = localize(data.title_line_1, locale);
+  const title2 = localize(data.title_line_2, locale);
+  const subtitle = localize(data.subtitle, locale);
+  const ctaWomen = localize(data.cta_women, locale) || dict.shopWomen;
+  const ctaMen = localize(data.cta_men, locale) || dict.shopMen;
   return (
     <section className="relative h-screen min-h-[640px] -mt-[96px] bg-ink overflow-hidden">
       {/\.(mp4|webm|mov|m4v)(\?|$)/i.test(data.image || "/hero-video.mp4") ? (
@@ -27,29 +43,31 @@ export default function Hero({ data, dict }: { data: LandingContent["hero"]; dic
 
       <div className="relative z-10 mx-auto max-w-[1440px] h-full px-6 md:px-10 flex items-end md:items-center pb-16 md:pb-0">
         <div className="max-w-2xl text-white text-center md:text-left mx-auto md:mx-0">
-          {data.overline && (
+          {overline && (
             <div className="text-[11px] tracking-widest-3 uppercase mb-6 opacity-90">
-              {data.overline}
+              {overline}
             </div>
           )}
           <h1 className="font-display text-5xl md:text-7xl lg:text-[88px] leading-[0.95] tracking-tight">
-            {data.title_line_1} <br /> {data.title_line_2}
+            {title1} <br /> {title2}
           </h1>
-          <p className="mt-6 text-sm md:text-base max-w-md mx-auto md:mx-0 opacity-90 leading-relaxed">
-            {data.subtitle}
-          </p>
+          {subtitle && (
+            <p className="mt-6 text-sm md:text-base max-w-md mx-auto md:mx-0 opacity-90 leading-relaxed">
+              {subtitle}
+            </p>
+          )}
           <div className="mt-10 flex flex-wrap gap-3 justify-center md:justify-start">
             <Link
               href="/shop/women"
               className="bg-white text-ink text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-bone transition-colors"
             >
-              {dict.shopWomen}
+              {ctaWomen}
             </Link>
             <Link
               href="/shop/men"
               className="border border-white/70 text-white text-[11px] tracking-widest-2 uppercase px-8 py-4 hover:bg-white hover:text-ink transition-colors"
             >
-              {dict.shopMen}
+              {ctaMen}
             </Link>
           </div>
         </div>

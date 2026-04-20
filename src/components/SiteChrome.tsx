@@ -7,7 +7,13 @@ import Cart from "@/components/Cart";
 import CookieBanner from "@/components/CookieBanner";
 import { useT } from "@/i18n/provider";
 
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+export default function SiteChrome({
+  children,
+  footerTagline,
+}: {
+  children: React.ReactNode;
+  footerTagline?: string;
+}) {
   const pathname = usePathname();
   const { locale } = useT();
   const isAdmin = pathname?.startsWith("/admin");
@@ -18,7 +24,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
     <>
       <Header />
       <main className="flex-1 pt-[96px]">{children}</main>
-      <Footer />
+      <Footer taglineOverride={footerTagline} />
       <Cart />
       <CookieBanner locale={locale} />
     </>

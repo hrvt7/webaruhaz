@@ -8,8 +8,7 @@ import {
   COLOR_HEX,
   Product,
   productCompareAt,
-  productLongDesc,
-  productShortDesc,
+  productField,
 } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import { useT } from "@/i18n/provider";
@@ -34,12 +33,19 @@ export default function ProductDetail({
   const compareAt = productCompareAt(p);
   const onSale = compareAt && compareAt > p.price;
 
+  const name = productField(p, "name", locale);
+  const shortDesc = productField(p, "short_desc", locale);
+  const longDesc = productField(p, "long_desc", locale);
+  const materials = productField(p, "materials", locale);
+  const careText = productField(p, "care", locale);
+  const sizeGuideText = productField(p, "size_guide", locale);
+
   const addToBag = () => {
     if (!size) return;
     add(
       {
         slug: p.slug,
-        name: p.name,
+        name,
         price: p.price,
         image: p.images[0],
         size,
@@ -76,14 +82,14 @@ export default function ProductDetail({
           {p.images.map((src, i) => (
             <div key={i} className="aspect-[3/4] bg-bone overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={p.name} className="h-full w-full object-cover" />
+              <img src={src} alt={name} className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
 
         <div className="lg:sticky lg:top-24 h-fit">
           <nav className="text-[11px] tracking-widest-2 uppercase text-muted mb-4">
-            <Link href="/shop" className="hover:text-ink">Shop</Link>
+            <Link href="/shop" className="hover:text-ink">{t.product.shop}</Link>
             <span className="mx-2">/</span>
             <span>{c.categoryLabel[p.category as keyof typeof c.categoryLabel] ?? p.category}</span>
           </nav>
@@ -94,7 +100,7 @@ export default function ProductDetail({
             </div>
           )}
 
-          <h1 className="font-display text-3xl md:text-4xl leading-tight">{p.name}</h1>
+          <h1 className="font-display text-3xl md:text-4xl leading-tight">{name}</h1>
 
           <div className="mt-3 flex items-baseline gap-3">
             {onSale ? (
@@ -109,11 +115,11 @@ export default function ProductDetail({
             )}
           </div>
 
-          <p className="mt-5 text-sm text-muted leading-relaxed">{productShortDesc(p)}</p>
+          <p className="mt-5 text-sm text-muted leading-relaxed">{shortDesc}</p>
 
           <div className="mt-8">
             <div className="flex items-center justify-between text-[11px] tracking-widest-2 uppercase mb-3">
-              <span>Colour — <span className="text-muted normal-case tracking-normal">{color}</span></span>
+              <span>{t.product.colour} — <span className="text-muted normal-case tracking-normal">{color}</span></span>
             </div>
             <div className="flex flex-wrap gap-2">
               {p.colors.map((c) => (
@@ -134,12 +140,12 @@ export default function ProductDetail({
 
           <div className="mt-8">
             <div className="flex items-center justify-between text-[11px] tracking-widest-2 uppercase mb-3">
-              <span>Size</span>
+              <span>{t.product.size}</span>
               <button
                 onClick={() => setSizeGuideOpen(true)}
                 className="text-muted flex items-center gap-1 hover:text-ink normal-case tracking-normal text-xs"
               >
-                <Ruler size={13} strokeWidth={1.6} /> Size guide
+                <Ruler size={13} strokeWidth={1.6} /> {t.product.sizeGuide}
               </button>
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -158,12 +164,12 @@ export default function ProductDetail({
               ))}
             </div>
             {!size && (
-              <div className="mt-2 text-[11px] text-muted">Válassz méretet.</div>
+              <div className="mt-2 text-[11px] text-muted">{t.product.pickSize}</div>
             )}
           </div>
 
           <div className="mt-6 flex items-center gap-3">
-            <div className="text-[11px] tracking-widest-2 uppercase">Qty</div>
+            <div className="text-[11px] tracking-widest-2 uppercase">{t.product.qty}</div>
             <div className="inline-flex border border-line">
               <button
                 className="h-10 w-10 hover:bg-bone"
@@ -188,33 +194,31 @@ export default function ProductDetail({
             disabled={!size}
             className="mt-8 w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            Add to bag
+            {t.product.addToBag}
           </button>
           <button className="mt-2 w-full border border-line text-[12px] tracking-widest-2 uppercase py-4 hover:border-ink flex items-center justify-center gap-2">
-            <Heart size={14} strokeWidth={1.4} /> Add to wishlist
+            <Heart size={14} strokeWidth={1.4} /> {t.product.addToWishlist}
           </button>
 
           <div className="mt-10">
-            {acc("description", "Description", productLongDesc(p))}
+            {acc("description", t.product.description, longDesc)}
             {acc(
               "materials",
-              "Materials",
+              t.product.materials,
               <>
-                {p.materials}
-                <div className="mt-2 text-xs text-muted font-mono">SKU: {p.sku}</div>
+                {materials}
+                <div className="mt-2 text-xs text-muted font-mono">{t.product.sku}: {p.sku}</div>
               </>,
             )}
-            {acc("care", "Care", p.care)}
+            {acc("care", t.product.care, careText)}
             {acc(
               "shipping",
-              "Shipping & Returns",
+              t.product.shipping,
               <>
-                Ingyenes szállítás 30.000 Ft felett. 14 napos ingyenes visszaküldés.
-                Részletek a{" "}
+                {t.product.shippingInfo}{" "}
                 <Link href="/shipping" className="underline">
-                  Shipping & Returns
-                </Link>{" "}
-                oldalon.
+                  {t.product.shipping}
+                </Link>
               </>,
             )}
           </div>
@@ -222,7 +226,7 @@ export default function ProductDetail({
       </div>
 
       <section className="mx-auto max-w-[1440px] px-4 md:px-10 py-20">
-        <h2 className="font-display text-2xl md:text-3xl mb-8">You may also like</h2>
+        <h2 className="font-display text-2xl md:text-3xl mb-8">{t.product.youMayLike}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {related.map((r) => (
             <ProductCard key={r.slug} p={r} />
@@ -234,24 +238,24 @@ export default function ProductDetail({
         <div className="fixed inset-0 z-50 bg-ink/40 grid place-items-center p-4">
           <div className="bg-white max-w-xl w-full max-h-[80vh] overflow-y-auto p-8">
             <div className="flex items-center justify-between mb-6">
-              <div className="font-display text-2xl">Size guide</div>
+              <div className="font-display text-2xl">{t.product.sizeGuide}</div>
               <button onClick={() => setSizeGuideOpen(false)} className="text-sm uppercase tracking-widest-2">
-                Close
+                {t.product.close}
               </button>
             </div>
-            {p.size_guide && p.size_guide.trim() ? (
+            {sizeGuideText && sizeGuideText.trim() ? (
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
-                {p.size_guide}
+                {sizeGuideText}
               </pre>
             ) : (
-              <SizeTable />
+              <SizeTable labels={t.product.sizeTable} />
             )}
             <div className="mt-6">
               <Link
                 href="/size-guide"
                 className="text-[11px] tracking-widest-2 uppercase underline"
               >
-                Full size guide →
+                {t.product.fullSizeGuide}
               </Link>
             </div>
           </div>
@@ -261,15 +265,15 @@ export default function ProductDetail({
   );
 }
 
-function SizeTable() {
+function SizeTable({ labels }: { labels: { size: string; bust: string; waist: string; hips: string } }) {
   return (
     <table className="w-full text-sm">
       <thead>
         <tr className="border-b border-line text-[11px] tracking-widest-2 uppercase text-muted">
-          <th className="text-left py-2">Size</th>
-          <th className="text-left py-2">Bust (cm)</th>
-          <th className="text-left py-2">Waist (cm)</th>
-          <th className="text-left py-2">Hips (cm)</th>
+          <th className="text-left py-2">{labels.size}</th>
+          <th className="text-left py-2">{labels.bust}</th>
+          <th className="text-left py-2">{labels.waist}</th>
+          <th className="text-left py-2">{labels.hips}</th>
         </tr>
       </thead>
       <tbody className="price">

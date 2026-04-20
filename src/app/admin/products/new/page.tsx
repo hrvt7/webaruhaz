@@ -59,6 +59,7 @@ export default async function NewProductPage() {
           collection: null,
           active: true,
           sort_order: 100,
+          i18n: {},
         }}
       />
     </div>

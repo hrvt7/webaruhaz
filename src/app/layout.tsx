@@ -7,6 +7,8 @@ import CookieConsent from "@/components/CookieConsent";
 import Analytics from "@/components/Analytics";
 import { I18nProvider } from "@/i18n/provider";
 import { getT } from "@/i18n/server";
+import { getLanding } from "@/lib/store";
+import { localize } from "@/lib/localize";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -70,6 +72,8 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const { locale } = await getT();
+  const landing = await getLanding().catch(() => null);
+  const footerTagline = localize(landing?.footer?.tagline, locale);
   return (
     <html
       lang={locale}
@@ -127,7 +131,7 @@ export default async function RootLayout({
         <Analytics />
         <I18nProvider locale={locale}>
           <CartProvider>
-            <SiteChrome>{children}</SiteChrome>
+            <SiteChrome footerTagline={footerTagline}>{children}</SiteChrome>
           </CartProvider>
         </I18nProvider>
         <CookieConsent />

@@ -4,8 +4,9 @@ import Link from "next/link";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useT } from "@/i18n/provider";
 
-export default function Footer() {
+export default function Footer({ taglineOverride }: { taglineOverride?: string }) {
   const { t, c } = useT();
+  const tagline = (taglineOverride && taglineOverride.trim()) || t.footer.tagline;
   const cols = [
     {
       title: t.footer.shop,
@@ -45,7 +46,7 @@ export default function Footer() {
         <div>
           <div className="font-display text-2xl tracking-[0.25em]">AETHERIS</div>
           <p className="mt-4 text-sm text-muted max-w-xs leading-relaxed">
-            {t.footer.tagline}
+            {tagline}
           </p>
           <div className="mt-6">
             <LanguageSwitcher />

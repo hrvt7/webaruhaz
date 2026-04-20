@@ -69,6 +69,7 @@ export default async function EditProductPage({
           collection: p.collection,
           active: p.active,
           sort_order: p.sort_order,
+          i18n: p.i18n ?? {},
         }}
       />
     </div>

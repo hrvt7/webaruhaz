@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Trash2, UploadCloud } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { saveProduct, deleteProduct, ProductInput } from "./actions";
+import { saveProduct, deleteProduct, ProductInput, ProductI18nFields } from "./actions";
 
 type Labels = {
   save: string;
@@ -55,13 +55,47 @@ const CATEGORIES = [
 ];
 const GENDERS = ["women", "men", "unisex"] as const;
 
+type LocaleKey = "hu" | "en" | "de";
+
 export default function ProductForm({ mode, initial, collections, labels }: Props) {
-  const [state, setState] = useState<ProductInput>(initial);
+  const [state, setState] = useState<ProductInput>({ ...initial, i18n: initial.i18n ?? {} });
   const [colorsText, setColorsText] = useState(initial.colors.join(", "));
   const [sizesText, setSizesText] = useState(initial.sizes.join(", "));
   const [uploading, setUploading] = useState(false);
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [locale, setLocale] = useState<LocaleKey>("hu");
+
+  // Olvasás: hu → fő oszlopok, en/de → state.i18n[locale]
+  const getField = (f: keyof ProductI18nFields): string => {
+    if (locale === "hu") {
+      switch (f) {
+        case "name": return state.name;
+        case "short_desc": return state.short_desc;
+        case "long_desc": return state.long_desc;
+        case "materials": return state.materials;
+        case "care": return state.care;
+        case "size_guide": return state.size_guide ?? "";
+      }
+    }
+    return state.i18n?.[locale]?.[f] ?? "";
+  };
+  const setField = (f: keyof ProductI18nFields, v: string) => {
+    if (locale === "hu") {
+      setState((s) => ({ ...s, [f]: v }));
+      return;
+    }
+    setState((s) => ({
+      ...s,
+      i18n: { ...(s.i18n || {}), [locale]: { ...(s.i18n?.[locale] || {}), [f]: v } },
+    }));
+  };
+  const hasTranslation = (loc: LocaleKey): boolean => {
+    if (loc === "hu") return true;
+    const x = state.i18n?.[loc];
+    if (!x) return false;
+    return !!(x.name || x.short_desc || x.long_desc || x.materials || x.care || x.size_guide);
+  };
 
   const onFile = async (file: File) => {
     setUploading(true);
@@ -121,11 +155,9 @@ export default function ProductForm({ mode, initial, collections, labels }: Prop
     <form onSubmit={submit} className="grid lg:grid-cols-[1fr_360px] gap-8">
       <div className="bg-white border border-line p-6 md:p-8 space-y-6">
         <div className="grid md:grid-cols-2 gap-4">
-          <Input label={labels.fields.name} value={state.name} onChange={(v) => setState({ ...state, name: v })} required />
           <Input label={labels.fields.sku} value={state.sku} onChange={(v) => setState({ ...state, sku: v })} required />
+          <Input label={labels.fields.slug} value={state.slug} onChange={(v) => setState({ ...state, slug: v })} required />
         </div>
-
-        <Input label={labels.fields.slug} value={state.slug} onChange={(v) => setState({ ...state, slug: v })} required />
 
         <div className="grid md:grid-cols-3 gap-4">
           <Select
@@ -166,14 +198,38 @@ export default function ProductForm({ mode, initial, collections, labels }: Prop
         <Input label={labels.fields.colors} value={colorsText} onChange={setColorsText} />
         <Input label={labels.fields.sizes} value={sizesText} onChange={setSizesText} />
 
-        <Textarea label={labels.fields.shortDesc} value={state.short_desc} onChange={(v) => setState({ ...state, short_desc: v })} rows={2} />
-        <Textarea label={labels.fields.longDesc} value={state.long_desc} onChange={(v) => setState({ ...state, long_desc: v })} rows={5} />
-        <Input label={labels.fields.materials} value={state.materials} onChange={(v) => setState({ ...state, materials: v })} />
-        <Input label={labels.fields.care} value={state.care} onChange={(v) => setState({ ...state, care: v })} />
+        {/* Nyelvi fülek a lefordítható mezőkhöz */}
+        <div className="flex items-center gap-2 pt-2 border-t border-line">
+          <div className="text-[10px] tracking-widest-2 uppercase text-muted">Nyelv:</div>
+          {(["hu", "en", "de"] as const).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setLocale(k)}
+              className={`text-[11px] tracking-widest-2 uppercase px-3 py-1 ${
+                locale === k ? "bg-ink text-white" : "border border-line text-muted hover:border-ink"
+              }`}
+            >
+              {k.toUpperCase()}
+              {hasTranslation(k) ? "" : k === "hu" ? "" : " ·"}
+            </button>
+          ))}
+          <div className="text-[10px] text-muted ml-auto">
+            {locale === "hu"
+              ? "Alap nyelv (fő adatok)"
+              : `${locale.toUpperCase()} fordítás — üres mező a HU-ra esik vissza`}
+          </div>
+        </div>
+
+        <Input label={labels.fields.name} value={getField("name")} onChange={(v) => setField("name", v)} required={locale === "hu"} />
+        <Textarea label={labels.fields.shortDesc} value={getField("short_desc")} onChange={(v) => setField("short_desc", v)} rows={2} />
+        <Textarea label={labels.fields.longDesc} value={getField("long_desc")} onChange={(v) => setField("long_desc", v)} rows={5} />
+        <Input label={labels.fields.materials} value={getField("materials")} onChange={(v) => setField("materials", v)} />
+        <Input label={labels.fields.care} value={getField("care")} onChange={(v) => setField("care", v)} />
         <Textarea
           label={labels.fields.size_guide ?? "Méret táblázat"}
-          value={state.size_guide ?? ""}
-          onChange={(v) => setState({ ...state, size_guide: v })}
+          value={getField("size_guide")}
+          onChange={(v) => setField("size_guide", v)}
           rows={6}
         />
 

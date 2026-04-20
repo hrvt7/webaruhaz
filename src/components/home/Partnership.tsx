@@ -1,6 +1,8 @@
 "use client";
 
 import { LandingContent } from "@/lib/store";
+import { useT } from "@/i18n/provider";
+import { localize } from "@/lib/localize";
 
 const FALLBACK = {
   overline: "Partnerség · 2026",
@@ -19,13 +21,14 @@ export default function Partnership({
 }: {
   data?: LandingContent["partnership"];
 }) {
-  const overline = data?.overline?.trim() || FALLBACK.overline;
-  const title = data?.title?.trim() || FALLBACK.title;
-  const body_1 = data?.body_1?.trim() || FALLBACK.body_1;
-  const body_2 = data?.body_2?.trim() || FALLBACK.body_2;
+  const { locale } = useT();
+  const overline = localize(data?.overline, locale) || FALLBACK.overline;
+  const title = localize(data?.title, locale) || FALLBACK.title;
+  const body_1 = localize(data?.body_1, locale) || FALLBACK.body_1;
+  const body_2 = localize(data?.body_2, locale) || FALLBACK.body_2;
   const image = data?.image?.trim() || FALLBACK.image;
   const link = data?.link?.trim() || FALLBACK.link;
-  const cta = data?.cta?.trim() || FALLBACK.cta;
+  const cta = localize(data?.cta, locale) || FALLBACK.cta;
 
   const isVideo = /\.(mp4|webm|mov|m4v)(\?|$)/i.test(image);
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {
   Product,
   productCompareAt,
+  productField,
 } from "@/data/products";
 import { useT } from "@/i18n/provider";
 import { formatMoney } from "@/lib/currency";
@@ -12,13 +13,14 @@ export default function ProductCard({ p }: { p: Product }) {
   const { c, locale } = useT();
   const compareAt = productCompareAt(p);
   const onSale = compareAt && compareAt > p.price;
+  const name = productField(p, "name", locale);
   return (
     <Link href={`/product/${p.slug}`} className="group block">
       <div className="hover-zoom relative aspect-[3/4] bg-bone overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={p.images[0]}
-          alt={p.name}
+          alt={name}
           className="h-full w-full object-cover"
           loading="lazy"
         />
@@ -40,7 +42,7 @@ export default function ProductCard({ p }: { p: Product }) {
       <div className="mt-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="font-display text-[15px] leading-tight truncate">
-            {p.name}
+            {name}
           </div>
           <div className="mt-1 text-[11px] tracking-widest-2 uppercase text-muted">
             {p.colors.length} {p.colors.length === 1 ? c.productCard.colour : c.productCard.colours}

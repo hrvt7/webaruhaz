@@ -4,8 +4,14 @@ import Link from "next/link";
 import { LandingContent } from "@/lib/store";
 import { useT } from "@/i18n/provider";
 
+import { localize } from "@/lib/localize";
+
 export default function BrandStory({ data }: { data: LandingContent["brand_story"] }) {
-  const { t } = useT();
+  const { t, locale } = useT();
+  const overline = localize(data.overline, locale) || t.home.ourStory;
+  const title = localize(data.title, locale);
+  const body1 = localize(data.body_1, locale);
+  const body2 = localize(data.body_2, locale);
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-32 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
       <div className="aspect-[4/5] bg-ink overflow-hidden">
@@ -30,14 +36,14 @@ export default function BrandStory({ data }: { data: LandingContent["brand_story
       </div>
       <div className="text-center md:text-left">
         <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-5">
-          {t.home.ourStory}
+          {overline}
         </div>
         <h2 className="font-display text-4xl md:text-5xl leading-[1.05] whitespace-pre-line">
-          {data.title}
+          {title}
         </h2>
-        <p className="mt-6 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{data.body_1}</p>
-        {data.body_2 && (
-          <p className="mt-4 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{data.body_2}</p>
+        {body1 && <p className="mt-6 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{body1}</p>}
+        {body2 && (
+          <p className="mt-4 text-muted leading-relaxed max-w-md mx-auto md:mx-0">{body2}</p>
         )}
         <Link
           href="/about"

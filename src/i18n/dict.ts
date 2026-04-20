@@ -34,6 +34,8 @@ type DictShape = {
     colour: string; size: string; sizeGuide: string; qty: string; addToBag: string; addToWishlist: string;
     description: string; materials: string; care: string; shipping: string; pickSize: string;
     youMayLike: string; sku: string; colours: string; shippingInfo: string;
+    shop: string; close: string; fullSizeGuide: string;
+    sizeTable: { size: string; bust: string; waist: string; hips: string };
   };
   cart: {
     title: string; checkout: string; thankYou: string; empty: string; emptyHint: string; shopAll: string;
@@ -152,6 +154,10 @@ export const dict: { hu: DictShape } = {
       sku: "Cikkszám",
       colours: "szín",
       shippingInfo: "Ingyenes szállítás 30.000 Ft felett. 14 napos ingyenes visszaküldés.",
+      shop: "Shop",
+      close: "Bezárás",
+      fullSizeGuide: "Teljes mérettáblázat →",
+      sizeTable: { size: "Méret", bust: "Mellbőség (cm)", waist: "Derék (cm)", hips: "Csípő (cm)" },
     },
     cart: {
       title: "Kosár",
@@ -379,6 +385,10 @@ const en: DictTree = {
     sku: "SKU",
     colours: "colour",
     shippingInfo: "Free shipping over 30.000 Ft. 14-day free returns.",
+    shop: "Shop",
+    close: "Close",
+    fullSizeGuide: "Full size guide →",
+    sizeTable: { size: "Size", bust: "Bust (cm)", waist: "Waist (cm)", hips: "Hips (cm)" },
   },
   cart: {
     title: "Shopping bag",
@@ -602,6 +612,10 @@ const de: DictTree = {
     sku: "Artikel-Nr.",
     colours: "Farbe",
     shippingInfo: "Kostenloser Versand ab 30.000 Ft. 14 Tage Rückgabe kostenlos.",
+    shop: "Shop",
+    close: "Schließen",
+    fullSizeGuide: "Vollständige Größentabelle →",
+    sizeTable: { size: "Größe", bust: "Brust (cm)", waist: "Taille (cm)", hips: "Hüfte (cm)" },
   },
   cart: {
     title: "Warenkorb",

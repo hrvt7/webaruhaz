@@ -23,6 +23,10 @@ export type Product = {
   care: string;
   size_guide?: string | null;
   badge?: string | null;
+  i18n?: {
+    en?: { name?: string; short_desc?: string; long_desc?: string; materials?: string; care?: string; size_guide?: string };
+    de?: { name?: string; short_desc?: string; long_desc?: string; materials?: string; care?: string; size_guide?: string };
+  } | null;
   images: string[];
   collection?: string | null;
   active?: boolean;
@@ -94,6 +98,29 @@ export function productShortDesc(p: Product): string {
 }
 export function productLongDesc(p: Product): string {
   return p.long_desc ?? p.longDesc ?? "";
+}
+
+// Lokalizált termék mezők olvasása. `hu` az alapértelmezett (= fő oszlopok),
+// `en`/`de` a `i18n` JSONB oszlopból, ha meg van adva.
+export function productField(
+  p: Product,
+  field: "name" | "short_desc" | "long_desc" | "materials" | "care" | "size_guide",
+  locale: "hu" | "en" | "de",
+): string {
+  if (locale !== "hu") {
+    const loc = p.i18n?.[locale];
+    const v = loc?.[field];
+    if (v && v.trim()) return v;
+  }
+  // fallback hu (fő oszlop)
+  switch (field) {
+    case "name": return p.name || "";
+    case "short_desc": return p.short_desc ?? p.shortDesc ?? "";
+    case "long_desc": return p.long_desc ?? p.longDesc ?? "";
+    case "materials": return p.materials || "";
+    case "care": return p.care || "";
+    case "size_guide": return p.size_guide || "";
+  }
 }
 
 export const PRICE_RANGE = { min: 5000, max: 120000 };
