@@ -103,6 +103,48 @@ export default function LandingForm({
         />
       </Section>
 
+      <Section title="Kategória kártyák (3 kép a főoldalon: Női / Férfi / Szettek)">
+        <div className="grid md:grid-cols-3 gap-4">
+          <ImagePicker
+            label="Női kártya képe"
+            v={state.categories?.women_image || ""}
+            on={(url) => setState({ ...state, categories: { women_image: url, men_image: state.categories?.men_image || "", sets_image: state.categories?.sets_image || "" } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, categories: { women_image: u, men_image: s.categories?.men_image || "", sets_image: s.categories?.sets_image || "" } })), "landing/categories")}
+            dropLabel={labels.dropImage}
+          />
+          <ImagePicker
+            label="Férfi kártya képe"
+            v={state.categories?.men_image || ""}
+            on={(url) => setState({ ...state, categories: { women_image: state.categories?.women_image || "", men_image: url, sets_image: state.categories?.sets_image || "" } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, categories: { women_image: s.categories?.women_image || "", men_image: u, sets_image: s.categories?.sets_image || "" } })), "landing/categories")}
+            dropLabel={labels.dropImage}
+          />
+          <ImagePicker
+            label="Szettek kártya képe"
+            v={state.categories?.sets_image || ""}
+            on={(url) => setState({ ...state, categories: { women_image: state.categories?.women_image || "", men_image: state.categories?.men_image || "", sets_image: url } })}
+            onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, categories: { women_image: s.categories?.women_image || "", men_image: s.categories?.men_image || "", sets_image: u } })), "landing/categories")}
+            dropLabel={labels.dropImage}
+          />
+        </div>
+      </Section>
+
+      <Section title="Partnerség szekció (főoldalon a Lookbook alatt)">
+        <Text label="Overline (kis fejléc)" v={state.partnership?.overline || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), overline: v } })} />
+        <Text label="Cím" v={state.partnership?.title || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), title: v } })} />
+        <Area label="Első bekezdés" rows={3} v={state.partnership?.body_1 || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), body_1: v } })} />
+        <Area label="Második bekezdés (opcionális)" rows={2} v={state.partnership?.body_2 || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), body_2: v } })} />
+        <ImagePicker
+          label="Kép / videó"
+          v={state.partnership?.image || ""}
+          on={(url) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), image: url } })}
+          onFile={(f) => upload(f, (u) => setState((s) => ({ ...s, partnership: { ...(s.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), image: u } })), "landing/partnership")}
+          dropLabel={labels.dropImage}
+        />
+        <Text label="Link URL" v={state.partnership?.link || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), link: v } })} />
+        <Text label="Gomb szöveg (CTA)" v={state.partnership?.cta || ""} on={(v) => setState({ ...state, partnership: { ...(state.partnership || { overline: "", title: "", body_1: "", body_2: "", image: "", link: "", cta: "" }), cta: v } })} />
+      </Section>
+
       <Section title="Lookbook (3 kép a főoldal alján)">
         <div className="grid md:grid-cols-3 gap-4">
           <ImagePicker

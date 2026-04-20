@@ -23,12 +23,12 @@ export default async function Home() {
     <>
       <Hero data={landing.hero} dict={{ shopWomen: t.home.shopWomen, shopMen: t.home.shopMen }} />
       <Marquee items={landing.marquee?.items} />
-      <CategoryGrid />
+      <CategoryGrid data={landing.categories} />
       <NewArrivals items={newArrivals} />
       <BrandStory data={landing.brand_story} />
       <CollectionHighlight data={landing.collection_highlight} />
       <EditorialGrid data={landing.editorial} />
-      <Partnership />
+      <Partnership data={landing.partnership} />
       <Newsletter data={landing.newsletter} />
     </>
   );

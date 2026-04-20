@@ -2,24 +2,29 @@
 
 import Link from "next/link";
 import { useT } from "@/i18n/provider";
+import { LandingContent } from "@/lib/store";
 
-export default function CategoryGrid() {
+export default function CategoryGrid({
+  data,
+}: {
+  data?: LandingContent["categories"];
+}) {
   const { t } = useT();
   const cards = [
     {
       title: t.nav.women,
       href: "/shop/women",
-      img: "/cat-women.jpg",
+      img: data?.women_image || "/cat-women.jpg",
     },
     {
       title: t.nav.men,
       href: "/shop/men",
-      img: "/cat-men.jpg",
+      img: data?.men_image || "/cat-men.jpg",
     },
     {
       title: "Szettek",
       href: "/shop/women",
-      img: "/cat-sets.jpg",
+      img: data?.sets_image || "/cat-sets.jpg",
     },
   ];
   return (

@@ -69,6 +69,20 @@ export type LandingContent = {
     title: string;
     body: string;
   };
+  categories?: {
+    women_image: string;
+    men_image: string;
+    sets_image: string;
+  };
+  partnership?: {
+    overline: string;
+    title: string;
+    body_1: string;
+    body_2: string;
+    image: string;
+    link: string;
+    cta: string;
+  };
 };
 
 export const CATEGORY_LABEL: Record<string, string> = {
