@@ -130,6 +130,21 @@ export default function LandingForm({
         ...patch,
       },
     }));
+  const updPay = (patch: Partial<NonNullable<LandingContent["payment_settings"]>>) =>
+    setState((s) => ({
+      ...s,
+      payment_settings: {
+        bank_name: s.payment_settings?.bank_name ?? "",
+        bank_account: s.payment_settings?.bank_account ?? "",
+        bank_beneficiary: s.payment_settings?.bank_beneficiary ?? "",
+        bank_swift: s.payment_settings?.bank_swift ?? "",
+        bank_iban: s.payment_settings?.bank_iban ?? "",
+        bank_memo_prefix: s.payment_settings?.bank_memo_prefix ?? "AETHERIS",
+        bank_payment_deadline_days: s.payment_settings?.bank_payment_deadline_days ?? 3,
+        cod_fee_huf: s.payment_settings?.cod_fee_huf ?? 490,
+        ...patch,
+      },
+    }));
   const updFooter = (patch: Partial<NonNullable<LandingContent["footer"]>>) =>
     setState((s) => ({
       ...s,
@@ -276,6 +291,53 @@ export default function LandingForm({
           </div>
         </div>
         <StyleBlock value={state.about?.style} onChange={(s) => updAbout({ style: s })} />
+      </Section>
+
+      <Section title="Fizetési beállítások — előreutalás + utánvét">
+        <div className="text-xs text-muted mb-3">
+          Csak <strong>magyar nyelvű (HU)</strong> vevőknek jelenik meg az előreutalás és utánvét lehetőség.
+          Nemzetközi vásárlóknak (EN/DE) csak a kártyás fizetés marad.
+        </div>
+
+        <div className="text-[11px] tracking-widest-2 uppercase text-muted mt-4 mb-2">Banki előreutalás adatai</div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Text label="Bank neve" v={state.payment_settings?.bank_name ?? ""} on={(v) => updPay({ bank_name: v })} />
+          <Text label="Kedvezményezett (cégnév)" v={state.payment_settings?.bank_beneficiary ?? ""} on={(v) => updPay({ bank_beneficiary: v })} />
+        </div>
+        <Text label="Bankszámlaszám (HU formátum, pl. 11773093-00000000-00000000)" v={state.payment_settings?.bank_account ?? ""} on={(v) => updPay({ bank_account: v })} />
+        <div className="grid md:grid-cols-2 gap-4">
+          <Text label="IBAN (nemzetközi — opcionális)" v={state.payment_settings?.bank_iban ?? ""} on={(v) => updPay({ bank_iban: v })} />
+          <Text label="SWIFT / BIC (opcionális)" v={state.payment_settings?.bank_swift ?? ""} on={(v) => updPay({ bank_swift: v })} />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Text label="Közlemény előtag (pl. AETHERIS → AETHERIS-A1B2C3D4)" v={state.payment_settings?.bank_memo_prefix ?? ""} on={(v) => updPay({ bank_memo_prefix: v.toUpperCase() })} />
+          <div>
+            <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-1">Fizetési határidő (nap)</div>
+            <input
+              type="number"
+              min={1}
+              max={30}
+              value={state.payment_settings?.bank_payment_deadline_days ?? 3}
+              onChange={(e) => updPay({ bank_payment_deadline_days: Number(e.target.value) })}
+              className="w-full border-b border-line focus:border-ink py-2 outline-none bg-transparent text-sm font-mono"
+            />
+          </div>
+        </div>
+
+        <div className="text-[11px] tracking-widest-2 uppercase text-muted mt-6 mb-2">Utánvét</div>
+        <div>
+          <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-1">Utánvét díj (Ft) — házhoz szállításnál adódik hozzá</div>
+          <input
+            type="number"
+            min={0}
+            value={state.payment_settings?.cod_fee_huf ?? 490}
+            onChange={(e) => updPay({ cod_fee_huf: Number(e.target.value) })}
+            className="w-full max-w-xs border-b border-line focus:border-ink py-2 outline-none bg-transparent text-sm font-mono"
+          />
+          <div className="text-[10px] text-muted mt-1">
+            Átvételi pontnál (személyes + Foxpost) nincs extra díj — a pénzt a helyszínen szedi be.
+          </div>
+        </div>
       </Section>
 
       <Section title="Footer / lábléc szöveg">

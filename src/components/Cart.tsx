@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Plus, Minus, Trash2, CreditCard, Truck, MapPin, Package } from "lucide-react";
+import { X, Plus, Minus, Trash2, CreditCard, Truck, MapPin, Package, Landmark, Banknote } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart, lineKey } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
 import { formatMoney, FREE_SHIPPING_THRESHOLD_HUF } from "@/lib/currency";
@@ -16,7 +17,14 @@ export default function Cart() {
   const [step, setStep] = useState<"bag" | "checkout" | "done">("bag");
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", note: "" });
   const [accepted, setAccepted] = useState(false);
-  const [busy, setBusy] = useState<null | "card">(null);
+  const [busy, setBusy] = useState<null | "card" | "bank" | "cod">(null);
+  type PaymentMethod = "stripe" | "bank_transfer" | "cod";
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe");
+  const [codFeeHuf, setCodFeeHuf] = useState(490);
+  const router = useRouter();
+
+  // Csak HU nyelvnél ajánlunk fel előreutalást/utánvétet
+  const extraPaymentsAvailable = locale === "hu";
   const [error, setError] = useState<string | null>(null);
 
   // Kupon UI állapot
@@ -39,6 +47,13 @@ export default function Cart() {
         if (d.locations?.[0]) setPickupId(d.locations[0].id);
       })
       .catch(() => {});
+    // COD díj lekérés (landing.payment_settings.cod_fee_huf)
+    fetch("/api/payment-settings")
+      .then((r) => r.json())
+      .then((d) => {
+        if (typeof d.cod_fee_huf === "number") setCodFeeHuf(d.cod_fee_huf);
+      })
+      .catch(() => {});
   }, []);
 
   const discountedSubtotal = Math.max(0, subtotal - discount);
@@ -51,7 +66,9 @@ export default function Cart() {
       : discountedSubtotal >= FREE_SHIPPING
         ? 0
         : 1690;
-  const grandTotal = discountedSubtotal + shipping;
+  // Utánvét díj csak házhoz szállításnál adódik hozzá
+  const codFee = paymentMethod === "cod" && shippingMethod === "delivery" ? codFeeHuf : 0;
+  const grandTotal = discountedSubtotal + shipping + codFee;
   const selectedPickup = pickupLocations.find((l) => l.id === pickupId);
 
   const couponErrorText = (code: string): string => {
@@ -143,10 +160,55 @@ export default function Cart() {
     }
   };
 
+  const buildShippingPayload = () =>
+    shippingMethod === "pickup" && selectedPickup
+      ? {
+          method: "pickup" as const,
+          location_id: selectedPickup.id,
+          location_name: selectedPickup.name,
+          location_address: `${selectedPickup.postcode ? selectedPickup.postcode + " " : ""}${selectedPickup.city}, ${selectedPickup.address}`,
+        }
+      : { method: "delivery" as const, address: form.address };
+
+  const placeNonStripeOrder = async (method: "bank_transfer" | "cod") => {
+    setBusy(method === "bank_transfer" ? "bank" : "cod");
+    setError(null);
+    try {
+      const res = await fetch("/api/order/create", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          items,
+          customer: form,
+          payment_method: method,
+          shipping: buildShippingPayload(),
+          coupon,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error ?? "Rendelés létrehozás hiba");
+      }
+      // Átirányítás
+      if (method === "bank_transfer") {
+        router.push(`/order/pending?ref=${encodeURIComponent(data.reference_code)}`);
+      } else {
+        router.push(`/order/success?cod=1&ref=${encodeURIComponent(data.reference_code)}`);
+      }
+      clear();
+      setOpen(false);
+    } catch (e) {
+      setError((e as Error).message);
+      setBusy(null);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!accepted) return;
-    await payWithCard();
+    if (paymentMethod === "stripe") return payWithCard();
+    if (paymentMethod === "bank_transfer") return placeNonStripeOrder("bank_transfer");
+    if (paymentMethod === "cod") return placeNonStripeOrder("cod");
   };
 
   return (
@@ -452,6 +514,50 @@ export default function Cart() {
               )}
               <Field label={t.cart.note} value={form.note} onChange={(v) => setForm({ ...form, note: v })} textarea />
 
+              {/* Fizetési mód blokk — csak HU nyelven jelennek meg a non-Stripe opciók */}
+              <div className="border border-line p-4 space-y-3">
+                <div className="text-[10px] tracking-widest-2 uppercase text-muted">
+                  {locale === "en" ? "Payment method" : locale === "de" ? "Zahlungsmethode" : "Fizetési mód"}
+                </div>
+
+                <ShippingOption
+                  selected={paymentMethod === "stripe"}
+                  onClick={() => setPaymentMethod("stripe")}
+                  icon={<CreditCard size={16} strokeWidth={1.5} />}
+                  title={locale === "en" ? "Credit / debit card" : locale === "de" ? "Kredit- / Debitkarte" : "Bankkártya"}
+                  subtitle={locale === "en" ? "Visa, Mastercard, Apple Pay, Google Pay" : locale === "de" ? "Visa, Mastercard, Apple Pay, Google Pay" : "Visa, Mastercard, Apple Pay, Google Pay"}
+                  fee={locale === "en" ? "Instant" : locale === "de" ? "Sofort" : "Azonnali"}
+                />
+
+                {extraPaymentsAvailable && (
+                  <ShippingOption
+                    selected={paymentMethod === "bank_transfer"}
+                    onClick={() => setPaymentMethod("bank_transfer")}
+                    icon={<Landmark size={16} strokeWidth={1.5} />}
+                    title="Előreutalás"
+                    subtitle="Utalási adatokat emailben küldünk · 2-3 munkanap"
+                    fee="0 Ft"
+                  />
+                )}
+
+                {extraPaymentsAvailable && (
+                  <ShippingOption
+                    selected={paymentMethod === "cod"}
+                    onClick={() => setPaymentMethod("cod")}
+                    icon={<Banknote size={16} strokeWidth={1.5} />}
+                    title="Utánvét"
+                    subtitle={
+                      shippingMethod === "delivery"
+                        ? `Futárnak fizetés átvételkor · +${formatMoney(codFeeHuf, locale)}`
+                        : shippingMethod === "pickup"
+                          ? "Üzletben fizetsz átvételkor (kp / kártya)"
+                          : "Automatánál fizetsz átvételkor"
+                    }
+                    fee={shippingMethod === "delivery" ? formatMoney(codFeeHuf, locale) : "0 Ft"}
+                  />
+                )}
+              </div>
+
               <label className="flex items-start gap-2 text-xs text-muted leading-relaxed cursor-pointer">
                 <input
                   type="checkbox"
@@ -487,35 +593,66 @@ export default function Cart() {
                   <span className="price">−{formatMoney(discount, locale)}</span>
                 </div>
               )}
+              {codFee > 0 && (
+                <div className="flex items-center justify-between text-xs text-muted">
+                  <span>Utánvét díj</span>
+                  <span className="price">+{formatMoney(codFee, locale)}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-sm">
                 <span>{t.cart.total}</span>
                 <span className="price">{formatMoney(grandTotal, locale)}</span>
               </div>
 
-              <button
-                type="button"
-                onClick={() => accepted && payWithCard()}
-                disabled={!accepted || busy !== null}
-                className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
-              >
-                <CreditCard size={14} strokeWidth={1.6} />
-                {busy === "card" ? "..." : c.cardPayment}
-              </button>
-              {STRIPE_ENABLED ? (
+              {/* Dinamikus fizetési gomb a kiválasztott módhoz */}
+              {paymentMethod === "stripe" && (
                 <>
-                  <PaymentBadges />
-                  <div className="text-center text-[10px] tracking-widest-2 uppercase text-muted">
-                    {c.secureCheckout}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => accepted && payWithCard()}
+                    disabled={!accepted || busy !== null}
+                    className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                  >
+                    <CreditCard size={14} strokeWidth={1.6} />
+                    {busy === "card" ? "..." : c.cardPayment}
+                  </button>
+                  {STRIPE_ENABLED ? (
+                    <>
+                      <PaymentBadges />
+                      <div className="text-center text-[10px] tracking-widest-2 uppercase text-muted">
+                        {c.secureCheckout}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="bg-bone p-3 text-[11px] text-muted text-center">
+                      Demo mód — a fizetés a Stripe kulcsok beállítása után válik aktívvá.
+                    </div>
+                  )}
                 </>
-              ) : (
-                <div className="bg-bone p-3 text-[11px] text-muted text-center">
-                  {locale === "en"
-                    ? "Demo mode — payment activated once Stripe keys are configured."
-                    : locale === "de"
-                      ? "Demo-Modus — Zahlung aktiv, sobald Stripe-Keys konfiguriert sind."
-                      : "Demo mód — a fizetés a Stripe kulcsok beállítása után válik aktívvá."}
-                </div>
+              )}
+
+              {paymentMethod === "bank_transfer" && (
+                <button
+                  type="button"
+                  onClick={() => accepted && placeNonStripeOrder("bank_transfer")}
+                  disabled={!accepted || busy !== null}
+                  className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  <Landmark size={14} strokeWidth={1.6} />
+                  {busy === "bank" ? "..." : "Utalási adatok kérése"}
+                </button>
+              )}
+
+              {paymentMethod === "cod" && (
+                <button
+                  type="button"
+                  onClick={() => accepted && placeNonStripeOrder("cod")}
+                  disabled={!accepted || busy !== null}
+                  className="w-full bg-ink text-white text-[12px] tracking-widest-2 uppercase py-4 hover:bg-accent disabled:opacity-40 flex items-center justify-center gap-2"
+                >
+                  <Banknote size={14} strokeWidth={1.6} />
+                  {busy === "cod" ? "..." : "Rendelés leadása — utánvéttel"}
+                </button>
               )}
 
               <button

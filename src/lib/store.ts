@@ -119,6 +119,16 @@ export type LandingContent = {
     tagline: LocalizedText;
     style?: SectionStyle;
   };
+  payment_settings?: {
+    bank_name?: string;
+    bank_account?: string;        // pl. 11773093-00000000-00000000
+    bank_beneficiary?: string;    // kedvezményezett név
+    bank_swift?: string;
+    bank_iban?: string;
+    bank_memo_prefix?: string;    // pl. "AETHERIS" → AETHERIS-ABC12345
+    bank_payment_deadline_days?: number; // hány napon belül kell utalni
+    cod_fee_huf?: number;         // utánvét díj (házhoz szállításnál)
+  };
   about?: {
     overline: LocalizedText;
     title: LocalizedText;

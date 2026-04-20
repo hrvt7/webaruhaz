@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { updateOrderStatus } from "./actions";
+import { ChevronDown, ChevronRight, Check } from "lucide-react";
+import { updateOrderStatus, markOrderPaid } from "./actions";
 
 type Item = {
   name: string;
@@ -29,6 +29,8 @@ export default function OrderRow({
     created_at: string;
     coupon_code?: string | null;
     discount_amount?: number | null;
+    payment_method?: string | null;
+    amount_total?: number | null;
     shipping_method?: string | null;
     shipping_fee?: number | null;
     shipping_details?: {
@@ -49,6 +51,14 @@ export default function OrderRow({
     setStatus(v);
     start(() => updateOrderStatus(order.id, v));
   };
+
+  const markPaid = () => {
+    if (!confirm("Biztosan fizetettnek jelölöd? A vevő automatikusan email értesítést kap.")) return;
+    setStatus("paid");
+    start(() => markOrderPaid(order.id));
+  };
+
+  const isAwaitingPayment = status === "awaiting_payment" || order.payment_method === "bank_transfer" && status !== "paid" && status !== "done";
 
   return (
     <>
@@ -151,6 +161,36 @@ export default function OrderRow({
                     </li>
                   ))}
                 </ul>
+
+                {/* Fizetés blokk — előreutalás esetén "Fizetettnek jelöl" gomb */}
+                {order.payment_method === "bank_transfer" && (
+                  <div className="mt-4 bg-white border border-line p-3">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-1">Fizetés</div>
+                    <div className="text-xs">
+                      Előreutalás · {typeof order.amount_total === "number" ? `${new Intl.NumberFormat("hu-HU").format(order.amount_total)} Ft` : ""}
+                    </div>
+                    {status !== "paid" && status !== "done" ? (
+                      <button
+                        type="button"
+                        onClick={markPaid}
+                        className="mt-3 w-full bg-ink text-white text-[11px] tracking-widest-2 uppercase py-2 hover:bg-accent flex items-center justify-center gap-2"
+                      >
+                        <Check size={14} strokeWidth={1.6} /> Fizetettnek jelöl
+                      </button>
+                    ) : (
+                      <div className="mt-3 text-[11px] text-green-700 font-medium">
+                        ✓ Fizetés megérkezett — email elküldve
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {order.payment_method === "cod" && (
+                  <div className="mt-4 bg-white border border-line p-3">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-1">Fizetés</div>
+                    <div className="text-xs">Utánvét — a vevő átvételkor fizet</div>
+                  </div>
+                )}
               </div>
             </div>
           </td>
