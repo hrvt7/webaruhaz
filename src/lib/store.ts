@@ -61,6 +61,8 @@ export type LandingContent = {
     items: string[];
   };
   editorial?: {
+    overline?: string;
+    title?: string;
     image1: string;
     image2: string;
     image3: string;

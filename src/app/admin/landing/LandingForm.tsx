@@ -146,6 +146,40 @@ export default function LandingForm({
       </Section>
 
       <Section title="Lookbook (3 kép a főoldal alján)">
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <Text
+            label="Kis felirat (overline) — üresen hagyva eltűnik a főoldalról"
+            v={state.editorial?.overline ?? ""}
+            on={(v) =>
+              setState({
+                ...state,
+                editorial: {
+                  image1: state.editorial?.image1 || "",
+                  image2: state.editorial?.image2 || "",
+                  image3: state.editorial?.image3 || "",
+                  title: state.editorial?.title,
+                  overline: v,
+                },
+              })
+            }
+          />
+          <Text
+            label="Cím — üresen hagyva eltűnik a főoldalról"
+            v={state.editorial?.title ?? ""}
+            on={(v) =>
+              setState({
+                ...state,
+                editorial: {
+                  image1: state.editorial?.image1 || "",
+                  image2: state.editorial?.image2 || "",
+                  image3: state.editorial?.image3 || "",
+                  overline: state.editorial?.overline,
+                  title: v,
+                },
+              })
+            }
+          />
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           <ImagePicker
             label="Első (nagy, bal oldal)"

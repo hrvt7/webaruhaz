@@ -22,16 +22,26 @@ export default function EditorialGrid({
     data?.image3 || "/landing-4.jpg",
   ];
 
+  const overline = data?.overline === undefined ? t.home.editorial : data.overline;
+  const title = data?.title === undefined ? t.home.lookbook : data.title;
+  const showHeader = Boolean((overline && overline.trim()) || (title && title.trim()));
+
   return (
     <section className="mx-auto max-w-[1440px] px-6 md:px-10 py-20 md:py-28">
-      <div className="flex items-end justify-between mb-10">
-        <div className="text-center md:text-left w-full md:w-auto">
-          <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
-            {t.home.editorial}
+      {showHeader && (
+        <div className="flex items-end justify-between mb-10">
+          <div className="text-center md:text-left w-full md:w-auto">
+            {overline && overline.trim() && (
+              <div className="text-[11px] tracking-widest-3 uppercase text-muted mb-3">
+                {overline}
+              </div>
+            )}
+            {title && title.trim() && (
+              <h2 className="font-display text-3xl md:text-5xl">{title}</h2>
+            )}
           </div>
-          <h2 className="font-display text-3xl md:text-5xl">{t.home.lookbook}</h2>
         </div>
-      </div>
+      )}
       <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         <div className="hover-zoom aspect-[3/4] md:aspect-[4/5] md:row-span-2 bg-bone overflow-hidden relative">
           {/* eslint-disable-next-line @next/next/no-img-element */}
