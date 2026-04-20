@@ -35,6 +35,10 @@ export async function POST(req: Request) {
     customer: { name: string; email: string; phone: string; address: string; note: string };
     locale?: "hu" | "en" | "de";
     coupon?: { code: string } | null;
+    shipping?:
+      | { method: "delivery"; address: string }
+      | { method: "pickup"; location_id: string; location_name: string; location_address: string }
+      | null;
   };
 
   if (!body.items?.length) {
@@ -60,7 +64,15 @@ export async function POST(req: Request) {
   }
 
   const discountedSubtotalHuf = Math.max(0, subtotalHuf - couponDiscountHuf);
-  const shippingHuf = discountedSubtotalHuf >= FREE_SHIPPING_THRESHOLD_HUF ? 0 : SHIPPING_FEE_HUF;
+
+  // Szállítási mód + díj
+  const shippingMethod = body.shipping?.method ?? "delivery";
+  const shippingHuf =
+    shippingMethod === "pickup"
+      ? 0
+      : discountedSubtotalHuf >= FREE_SHIPPING_THRESHOLD_HUF
+        ? 0
+        : SHIPPING_FEE_HUF;
   const totalHuf = discountedSubtotalHuf + shippingHuf;
 
   // Persist draft order (always in HUF internally)
@@ -81,6 +93,9 @@ export async function POST(req: Request) {
       payment_method: "stripe",
       coupon_code: couponCode,
       discount_amount: couponDiscountHuf,
+      shipping_method: shippingMethod,
+      shipping_details: body.shipping ?? {},
+      shipping_fee: shippingHuf,
     })
     .select("id")
     .single();
@@ -95,11 +110,18 @@ export async function POST(req: Request) {
   // EUR is two-decimal — unit_amount = cents.
   const toUnit = (huf: number) => (useEur ? hufToEurCents(huf) : huf);
 
-  const shippingLabel = useEur
-    ? locale === "de"
-      ? "Versand"
-      : "Shipping"
-    : "Szállítás";
+  const isPickup = shippingMethod === "pickup";
+  const shippingLabel = isPickup
+    ? (useEur
+        ? locale === "de"
+          ? `Abholung — ${body.shipping?.method === "pickup" ? body.shipping.location_name : ""}`
+          : `Pickup — ${body.shipping?.method === "pickup" ? body.shipping.location_name : ""}`
+        : `Átvétel — ${body.shipping?.method === "pickup" ? body.shipping.location_name : ""}`)
+    : (useEur
+        ? locale === "de"
+          ? "Versand"
+          : "Shipping"
+        : "Szállítás");
 
   type LineItem = {
     quantity: number;
@@ -168,6 +190,12 @@ export async function POST(req: Request) {
       locale,
       coupon_code: couponCode ?? "",
       discount_huf: String(couponDiscountHuf),
+      shipping_method: shippingMethod,
+      shipping_fee_huf: String(shippingHuf),
+      pickup_location:
+        body.shipping?.method === "pickup"
+          ? `${body.shipping.location_name} — ${body.shipping.location_address}`
+          : "",
     },
     success_url: `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/order/cancel?session_id={CHECKOUT_SESSION_ID}`,

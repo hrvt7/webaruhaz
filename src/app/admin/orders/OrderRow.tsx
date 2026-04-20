@@ -27,6 +27,17 @@ export default function OrderRow({
     subtotal: number;
     status: string;
     created_at: string;
+    coupon_code?: string | null;
+    discount_amount?: number | null;
+    shipping_method?: string | null;
+    shipping_fee?: number | null;
+    shipping_details?: {
+      method?: string;
+      address?: string;
+      location_id?: string;
+      location_name?: string;
+      location_address?: string;
+    } | null;
   };
   labels: { status: string; statusOptions: { value: string; label: string }[] };
 }) {
@@ -84,13 +95,43 @@ export default function OrderRow({
             <div className="grid md:grid-cols-[1fr_1fr] gap-6 text-sm">
               <div>
                 <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-2">
-                  Szállítási cím
+                  Szállítás
                 </div>
-                <div className="whitespace-pre-line">
-                  {order.customer_address || "—"}
-                </div>
+                {order.shipping_method === "pickup" ? (
+                  <div className="bg-white border border-line p-3">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-ink mb-1">Személyes átvétel</div>
+                    <div className="font-medium">{order.shipping_details?.location_name}</div>
+                    <div className="text-xs text-muted">{order.shipping_details?.location_address}</div>
+                    {typeof order.shipping_fee === "number" && (
+                      <div className="text-xs text-muted mt-1 price">Díj: {new Intl.NumberFormat("hu-HU").format(order.shipping_fee)} Ft</div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white border border-line p-3">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-ink mb-1">Házhoz szállítás</div>
+                    <div className="whitespace-pre-line">
+                      {order.shipping_details?.address || order.customer_address || "—"}
+                    </div>
+                    {typeof order.shipping_fee === "number" && (
+                      <div className="text-xs text-muted mt-1 price">Díj: {new Intl.NumberFormat("hu-HU").format(order.shipping_fee)} Ft</div>
+                    )}
+                  </div>
+                )}
+
+                {order.coupon_code && (
+                  <div className="mt-3 bg-white border border-line p-3">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-ink mb-1">Kupon</div>
+                    <div className="font-mono tracking-widest-2 uppercase text-sm">{order.coupon_code}</div>
+                    {typeof order.discount_amount === "number" && order.discount_amount > 0 && (
+                      <div className="text-xs text-sale price mt-1">
+                        −{new Intl.NumberFormat("hu-HU").format(order.discount_amount)} Ft
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {order.note && (
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <div className="text-[10px] tracking-widest-2 uppercase text-muted mb-2">
                       Megjegyzés
                     </div>

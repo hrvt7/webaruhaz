@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { X, Plus, Minus, Trash2, CreditCard } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, Plus, Minus, Trash2, CreditCard, Truck, MapPin, Package } from "lucide-react";
 import Link from "next/link";
 import { useCart, lineKey } from "@/context/CartContext";
 import { useT } from "@/i18n/provider";
@@ -24,9 +24,35 @@ export default function Cart() {
   const [couponChecking, setCouponChecking] = useState(false);
   const [couponError, setCouponError] = useState<string | null>(null);
 
+  // Szállítási mód
+  type ShippingMethod = "delivery" | "pickup";
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("delivery");
+  type PickupLoc = { id: string; name: string; address: string; city: string; postcode: string | null; hours: string | null };
+  const [pickupLocations, setPickupLocations] = useState<PickupLoc[]>([]);
+  const [pickupId, setPickupId] = useState<string>("");
+
+  useEffect(() => {
+    fetch("/api/shipping/pickup-locations")
+      .then((r) => r.json())
+      .then((d) => {
+        setPickupLocations(d.locations ?? []);
+        if (d.locations?.[0]) setPickupId(d.locations[0].id);
+      })
+      .catch(() => {});
+  }, []);
+
   const discountedSubtotal = Math.max(0, subtotal - discount);
-  const shipping = discountedSubtotal >= 30000 ? 0 : 1690;
+
+  // Szállítási díj az aktuális mód alapján
+  const FREE_SHIPPING = 30000;
+  const shipping =
+    shippingMethod === "pickup"
+      ? 0
+      : discountedSubtotal >= FREE_SHIPPING
+        ? 0
+        : 1690;
   const grandTotal = discountedSubtotal + shipping;
+  const selectedPickup = pickupLocations.find((l) => l.id === pickupId);
 
   const couponErrorText = (code: string): string => {
     if (code.startsWith("MIN_ORDER:")) {
@@ -91,10 +117,20 @@ export default function Cart() {
     setBusy("card");
     setError(null);
     try {
+      const shippingPayload =
+        shippingMethod === "pickup" && selectedPickup
+          ? {
+              method: "pickup" as const,
+              location_id: selectedPickup.id,
+              location_name: selectedPickup.name,
+              location_address: `${selectedPickup.postcode ? selectedPickup.postcode + " " : ""}${selectedPickup.city}, ${selectedPickup.address}`,
+            }
+          : { method: "delivery" as const, address: form.address };
+
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ items, customer: form, locale, coupon }),
+        body: JSON.stringify({ items, customer: form, locale, coupon, shipping: shippingPayload }),
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
@@ -331,7 +367,89 @@ export default function Cart() {
               <Field label={t.cart.name} value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
               <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required type="email" />
               <Field label={t.cart.phone} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required type="tel" />
-              <Field label={t.cart.address} value={form.address} onChange={(v) => setForm({ ...form, address: v })} required />
+
+              {/* Szállítási mód blokk */}
+              <div className="border border-line p-4 space-y-3">
+                <div className="text-[10px] tracking-widest-2 uppercase text-muted">
+                  {locale === "en" ? "Shipping method" : locale === "de" ? "Versandart" : "Szállítási mód"}
+                </div>
+
+                <ShippingOption
+                  selected={shippingMethod === "delivery"}
+                  onClick={() => setShippingMethod("delivery")}
+                  icon={<Truck size={16} strokeWidth={1.5} />}
+                  title={locale === "en" ? "Home delivery" : locale === "de" ? "Lieferung nach Hause" : "Házhoz szállítás"}
+                  subtitle={locale === "en" ? "GLS courier, 1-3 business days" : locale === "de" ? "GLS-Kurier, 1-3 Werktage" : "GLS futár, 1-3 munkanap"}
+                  fee={
+                    discountedSubtotal >= FREE_SHIPPING
+                      ? (locale === "en" ? "Free" : locale === "de" ? "Kostenlos" : "Ingyenes")
+                      : formatMoney(1690, locale)
+                  }
+                />
+
+                <ShippingOption
+                  selected={shippingMethod === "pickup"}
+                  onClick={() => pickupLocations.length > 0 && setShippingMethod("pickup")}
+                  disabled={pickupLocations.length === 0}
+                  icon={<MapPin size={16} strokeWidth={1.5} />}
+                  title={locale === "en" ? "Personal pickup" : locale === "de" ? "Persönliche Abholung" : "Személyes átvétel"}
+                  subtitle={
+                    pickupLocations.length === 0
+                      ? (locale === "en" ? "No pickup points currently" : locale === "de" ? "Keine Abholpunkte" : "Nincs elérhető átvételi pont")
+                      : (locale === "en" ? `${pickupLocations.length} pickup point${pickupLocations.length > 1 ? "s" : ""}` : locale === "de" ? `${pickupLocations.length} Abholpunkt${pickupLocations.length > 1 ? "e" : ""}` : `${pickupLocations.length} üzlet`)
+                  }
+                  fee={locale === "en" ? "Free" : locale === "de" ? "Kostenlos" : "Ingyenes"}
+                />
+
+                {/* Foxpost előkészítve, regisztráció után aktiválható */}
+                <ShippingOption
+                  selected={false}
+                  onClick={() => {}}
+                  disabled
+                  icon={<Package size={16} strokeWidth={1.5} />}
+                  title="Foxpost automata"
+                  subtitle={locale === "en" ? "Coming soon" : locale === "de" ? "Demnächst" : "Hamarosan"}
+                  fee={formatMoney(890, locale)}
+                />
+
+                {/* Pickup választó */}
+                {shippingMethod === "pickup" && pickupLocations.length > 0 && (
+                  <div className="pt-3 border-t border-line space-y-2">
+                    <div className="text-[10px] tracking-widest-2 uppercase text-muted">
+                      {locale === "en" ? "Choose a pickup point" : locale === "de" ? "Abholpunkt wählen" : "Válassz átvételi pontot"}
+                    </div>
+                    {pickupLocations.map((l) => (
+                      <label
+                        key={l.id}
+                        className={`flex items-start gap-3 p-3 border cursor-pointer ${
+                          pickupId === l.id ? "border-ink bg-bone" : "border-line hover:border-ink/40"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="pickup"
+                          checked={pickupId === l.id}
+                          onChange={() => setPickupId(l.id)}
+                          className="accent-ink mt-1"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm">{l.name}</div>
+                          <div className="text-xs text-muted mt-0.5">
+                            {l.postcode ? `${l.postcode} ` : ""}{l.city}, {l.address}
+                          </div>
+                          {l.hours && (
+                            <div className="text-[10px] text-muted mt-1 whitespace-pre-line">{l.hours}</div>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {shippingMethod === "delivery" && (
+                <Field label={t.cart.address} value={form.address} onChange={(v) => setForm({ ...form, address: v })} required />
+              )}
               <Field label={t.cart.note} value={form.note} onChange={(v) => setForm({ ...form, note: v })} textarea />
 
               <label className="flex items-start gap-2 text-xs text-muted leading-relaxed cursor-pointer">
@@ -460,5 +578,45 @@ function Field({
         <input type={type} value={value} onChange={(e) => onChange(e.target.value)} required={required} className={base} />
       )}
     </label>
+  );
+}
+
+function ShippingOption({
+  selected,
+  disabled,
+  onClick,
+  icon,
+  title,
+  subtitle,
+  fee,
+}: {
+  selected: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  fee: string;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 p-3 border text-left transition-colors ${
+        disabled
+          ? "border-line opacity-40 cursor-not-allowed"
+          : selected
+            ? "border-ink bg-bone"
+            : "border-line hover:border-ink/40 cursor-pointer"
+      }`}
+    >
+      <div className="shrink-0 text-ink/70">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium text-sm">{title}</div>
+        <div className="text-xs text-muted">{subtitle}</div>
+      </div>
+      <div className="price text-sm shrink-0">{fee}</div>
+    </button>
   );
 }
